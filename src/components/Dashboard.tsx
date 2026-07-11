@@ -442,22 +442,40 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
+                  <defs>
+                    <filter id="pieShadow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feDropShadow dx="4" dy="4" stdDeviation="0" floodColor="var(--pixel-border)" floodOpacity="1" />
+                    </filter>
+                  </defs>
                   <Pie
                     data={Object.entries(languages).map(([name, value]) => ({ name, value: Number(value) }))}
                     cx="50%"
                     cy="50%"
                     innerRadius={60}
                     outerRadius={100}
-                    paddingAngle={5}
+                    paddingAngle={0}
                     dataKey="value"
+                    stroke="var(--pixel-border)"
+                    strokeWidth={3}
+                    filter="url(#pieShadow)"
                   >
                     {Object.entries(languages).map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={['#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#f59e0b', '#f43f5e'][index % 6]} />
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={['#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#f59e0b', '#f43f5e'][index % 6]} 
+                      />
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                    itemStyle={{ color: '#fff' }}
+                    contentStyle={{ 
+                      backgroundColor: 'var(--pixel-panel-bg)', 
+                      border: '3px solid var(--pixel-border)',
+                      borderRadius: '0px',
+                      boxShadow: '4px 4px 0px var(--pixel-border)',
+                      color: 'var(--color-foreground)',
+                      fontFamily: 'var(--font-pixel)'
+                    }}
+                    itemStyle={{ color: 'var(--color-foreground)', fontWeight: 'bold' }}
                   />
                 </PieChart>
               </ResponsiveContainer>
