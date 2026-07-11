@@ -7,6 +7,8 @@
 A beautiful, neo-brutalist / pixel-art GitHub traffic analytics tool built with Tauri and Next.js.
 
 <img src="./public/logo.png" width="100" />
+<br/>
+<img src="./public/screenshot.png" width="800" />
 
 ## 📖 About Repo-rter
 GitHub only provides 14 days of traffic analytics for your repositories. Repo-rter solves this by continuously running in the background of your desktop to infinitely track and store your repository views, clones, and stars locally. You never lose your data again!

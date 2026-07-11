@@ -7,6 +7,8 @@
 Alat analitik lalu lintas GitHub yang indah.
 
 <img src="./public/logo.png" width="100" />
+<br/>
+<img src="./public/screenshot.png" width="800" />
 
 ## 📖 Tentang Repo-rter
 GitHub hanya menyediakan 14 hari data. Repo-rter menyimpannya tanpa batas.

@@ -7,6 +7,8 @@
 Ein wunderschönes GitHub-Traffic-Analyse-Tool.
 
 <img src="./public/logo.png" width="100" />
+<br/>
+<img src="./public/screenshot.png" width="800" />
 
 ## 📖 Über Repo-rter
 GitHub bietet nur 14 Tage Daten. Repo-rter speichert Ihre Daten unbegrenzt.

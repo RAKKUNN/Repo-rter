@@ -7,6 +7,8 @@
 Uma bela ferramenta de análise de tráfego do GitHub.
 
 <img src="./public/logo.png" width="100" />
+<br/>
+<img src="./public/screenshot.png" width="800" />
 
 ## 📖 Sobre Repo-rter
 O GitHub fornece apenas 14 dias de dados. O Repo-rter guarda os seus dados infinitamente.

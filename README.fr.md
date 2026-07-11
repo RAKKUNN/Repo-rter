@@ -7,6 +7,8 @@
 Un magnifique outil d'analyse de trafic GitHub construit avec Tauri et Next.js.
 
 <img src="./public/logo.png" width="100" />
+<br/>
+<img src="./public/screenshot.png" width="800" />
 
 ## 📖 À propos de Repo-rter
 GitHub ne fournit que 14 jours de données. Repo-rter s'exécute en arrière-plan pour sauvegarder vos données indéfiniment.

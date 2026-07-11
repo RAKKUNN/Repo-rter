@@ -7,6 +7,8 @@
 美しくネオブルータリズムなGitHubトラフィック分析ツール。
 
 <img src="./public/logo.png" width="100" />
+<br/>
+<img src="./public/screenshot.png" width="800" />
 
 ## 📖 Repo-rter について
 GitHubは14日間のデータしか提供しません。Repo-rterはデータをローカルに無期限で保存します。

@@ -7,6 +7,8 @@
 أداة جميلة لتحليل زيارات GitHub مبنية باستخدام Tauri و Next.js.
 
 <img src="./public/logo.png" width="100" />
+<br/>
+<img src="./public/screenshot.png" width="800" />
 
 ## 📖 حول Repo-rter
 يوفر GitHub بيانات لمدة 14 يومًا فقط. تعمل هذه الأداة في الخلفية لحفظ بياناتك بلا حدود.

@@ -7,6 +7,8 @@
 一个美丽、新粗野主义/像素艺术风格的 GitHub 流量分析工具，使用 Tauri 和 Next.js 构建。
 
 <img src="./public/logo.png" width="100" />
+<br/>
+<img src="./public/screenshot.png" width="800" />
 
 ## 📖 关于 Repo-rter
 GitHub 仅提供 14 天的流量数据。Repo-rter 在后台持续运行，无限期地跟踪并将数据保存在本地。
