@@ -2,8 +2,8 @@
 
 import { motion } from 'framer-motion';
 import {
-  Area,
-  AreaChart,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -15,6 +15,39 @@ interface TrafficChartProps {
   data: { timestamp: string; count: number; uniques: number }[];
   title: string;
 }
+
+// Custom square dot for the line chart
+const CustomizedDot = (props: any) => {
+  const { cx, cy, stroke, payload, value } = props;
+  if (!cx || !cy) return null;
+  return (
+    <rect 
+      x={cx - 4} 
+      y={cy - 4} 
+      width={8} 
+      height={8} 
+      fill={stroke} 
+      stroke="var(--pixel-border)" 
+      strokeWidth={2} 
+    />
+  );
+};
+
+const CustomizedActiveDot = (props: any) => {
+  const { cx, cy, stroke } = props;
+  if (!cx || !cy) return null;
+  return (
+    <rect 
+      x={cx - 6} 
+      y={cy - 6} 
+      width={12} 
+      height={12} 
+      fill={stroke} 
+      stroke="var(--pixel-border)" 
+      strokeWidth={2} 
+    />
+  );
+};
 
 export default function TrafficChart({ data, title }: TrafficChartProps) {
   // Format dates for X-axis
@@ -36,7 +69,12 @@ export default function TrafficChart({ data, title }: TrafficChartProps) {
       <h3 className="text-lg font-medium mb-6">{title}</h3>
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={formattedData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+          <LineChart data={formattedData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <defs>
+              <filter id="neoShadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="4" dy="4" stdDeviation="0" floodColor="var(--pixel-border)" floodOpacity="1" />
+              </filter>
+            </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#ccc" vertical={false} />
             <XAxis 
               dataKey="displayDate" 
@@ -44,14 +82,14 @@ export default function TrafficChart({ data, title }: TrafficChartProps) {
               fontSize={14}
               fontFamily="var(--font-pixel)"
               tickLine={false}
-              axisLine={false}
+              axisLine={{ stroke: 'var(--pixel-border)', strokeWidth: 2 }}
             />
             <YAxis 
               stroke="var(--color-foreground)" 
               fontSize={14}
               fontFamily="var(--font-pixel)"
               tickLine={false}
-              axisLine={false}
+              axisLine={{ stroke: 'var(--pixel-border)', strokeWidth: 2 }}
               tickFormatter={(value) => value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value}
             />
             <Tooltip 
@@ -65,25 +103,27 @@ export default function TrafficChart({ data, title }: TrafficChartProps) {
               }}
               itemStyle={{ color: 'var(--color-foreground)', fontWeight: 'bold' }}
             />
-            <Area 
-              type="stepAfter" 
+            <Line 
+              type="linear" 
               dataKey="count" 
-              stroke="var(--pixel-border)" 
-              strokeWidth={2}
-              fillOpacity={1} 
-              fill="var(--pixel-blue)" 
+              stroke="var(--pixel-blue)" 
+              strokeWidth={4}
               name="Total"
+              filter="url(#neoShadow)"
+              dot={<CustomizedDot />}
+              activeDot={<CustomizedActiveDot />}
             />
-            <Area 
-              type="stepAfter" 
+            <Line 
+              type="linear" 
               dataKey="uniques" 
-              stroke="var(--pixel-border)" 
-              strokeWidth={2}
-              fillOpacity={1} 
-              fill="var(--pixel-purple)" 
+              stroke="var(--pixel-purple)" 
+              strokeWidth={4}
               name="Unique"
+              filter="url(#neoShadow)"
+              dot={<CustomizedDot />}
+              activeDot={<CustomizedActiveDot />}
             />
-          </AreaChart>
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </motion.div>
