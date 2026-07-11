@@ -5,6 +5,8 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { useState, useEffect } from 'react';
 import '@/lib/i18n';
+import { ThemeProvider } from 'next-themes';
+import { ToastProvider } from './ToastProvider';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -34,11 +36,15 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <PersistQueryClientProvider 
-      client={queryClient} 
-      persistOptions={{ persister }}
-    >
-      {children}
-    </PersistQueryClientProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      <ToastProvider>
+        <PersistQueryClientProvider 
+          client={queryClient} 
+          persistOptions={{ persister }}
+        >
+          {children}
+        </PersistQueryClientProvider>
+      </ToastProvider>
+    </ThemeProvider>
   );
 }

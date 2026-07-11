@@ -2,7 +2,7 @@
 
 :root {
   /* Pixel Art Theme Variables */
-  --background: #F5F5F5; 
+  --background: #E5E5F7; /* Grid paper retro feel */
   --foreground: #1A1A1A;
 
   /* Retro Arcade Colors */
@@ -12,9 +12,9 @@
   --pixel-red: #ef4444;
   --pixel-yellow: #f59e0b;
 
-  --pixel-panel-bg: #F5F5F5;
+  --pixel-panel-bg: #FFFFFF;
   --pixel-border: #1A1A1A;
-  --dot-color: #e5e5e5;
+  --dot-color: #C1C1D6;
 }
 
 .dark {

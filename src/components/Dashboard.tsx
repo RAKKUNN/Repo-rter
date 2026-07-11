@@ -5,11 +5,13 @@ import { getUser, getRepos, getRepoTrafficViews, getRepoTrafficClones, getRepoTr
 import { removeGithubToken } from '@/lib/auth';
 import { open } from '@tauri-apps/plugin-shell';
 import { isTauri } from '@tauri-apps/api/core';
-import { LogOut, LayoutDashboard, Loader2, Star, Eye, GitBranch, GitPullRequest, EyeOff, Globe, Download, Settings, Moon, Sun, MessageCircle } from 'lucide-react';
+import { LogOut, LayoutDashboard, Loader2, Star, Eye, GitBranch, GitPullRequest, EyeOff, Globe, Download, Settings, Moon, Sun, MessageCircle, Search } from 'lucide-react';
 import MetricCard from './MetricCard';
 import TrafficChart from './TrafficChart';
 import GlobalTrafficChart from './GlobalTrafficChart';
 import SettingsModal from './SettingsModal';
+import EmptyState from './EmptyState';
+import DashboardSkeleton from './DashboardSkeleton';
 import { useBackgroundSync } from '@/hooks/useBackgroundSync';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
@@ -24,33 +26,11 @@ export default function Dashboard() {
   const [hiddenRepos, setHiddenRepos] = useState<Record<string, boolean>>({});
   const [activeMetric, setActiveMetric] = useState<'stars' | 'forks' | 'repos' | null>(null);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showForks, setShowForks] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Initialize background scheduler
   useBackgroundSync();
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    setIsDarkMode(prev => {
-      const next = !prev;
-      if (next) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-      }
-      return next;
-    });
-  };
-  const [showForks, setShowForks] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('hiddenRepos');
@@ -87,8 +67,10 @@ export default function Dashboard() {
     return true;
   }) || [];
   
-  // Sorted for the sidebar
-  const sortedVisibleRepos = [...visibleRepos].sort((a: any, b: any) => b.stargazers_count - a.stargazers_count);
+  // Sorted and filtered for the sidebar
+  const sortedVisibleRepos = [...visibleRepos]
+    .filter(repo => repo.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .sort((a: any, b: any) => b.stargazers_count - a.stargazers_count);
   const hiddenReposList = repos?.filter((r: any) => hiddenRepos[r.name]) || [];
 
   const handleLogout = () => {
@@ -128,11 +110,7 @@ export default function Dashboard() {
   }, [totalStars]);
 
   if (loadingUser || loadingRepos) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-pixel-blue" />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (
@@ -140,15 +118,30 @@ export default function Dashboard() {
       {/* Sidebar */}
       <aside className="w-72 border-r border-glass-border bg-glass backdrop-blur-xl flex flex-col h-full">
         <div className="p-6 border-b border-glass-border flex items-center justify-between">
-          <div className="flex items-center gap-3 font-bold text-xl">
-            <GitPullRequest className="w-6 h-6 text-pixel-purple" />
-            <span className="text-gradient">{t('appTitle')}</span>
+          <div className="flex items-center gap-3">
+            <img src="/logo.png" alt="Logo" className="w-8 h-8 rendering-pixelated" style={{ imageRendering: 'pixelated' }} />
+            <span className="text-2xl font-black tracking-tighter text-pixel-blue" style={{ fontFamily: 'ui-sans-serif, system-ui, sans-serif', textShadow: '2px 2px 0px var(--pixel-border)' }}>
+              {t('appTitle')}
+            </span>
           </div>
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 py-4 scrollbar-hide relative">
+          <div className="mb-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/50" />
+              <input 
+                type="text" 
+                placeholder="Search repos..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-[var(--pixel-panel-bg)] border-2 border-[var(--pixel-border)] pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pixel-blue font-bold shadow-[2px_2px_0px_var(--pixel-border)] placeholder:text-foreground/40"
+              />
+            </div>
+          </div>
+          
           <div className="text-xs font-semibold text-foreground/50 uppercase tracking-wider mb-4 px-2">
-            {t('topRepos')} ({visibleRepos.length})
+            {t('topRepos')} ({sortedVisibleRepos.length} / {visibleRepos.length})
           </div>
           <div className="space-y-1 mb-6">
             {sortedVisibleRepos.map((repo: any) => (
@@ -234,12 +227,10 @@ export default function Dashboard() {
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
         user={user}
-        isDarkMode={isDarkMode}
-        toggleTheme={toggleTheme}
-        toggleLanguage={toggleLanguage}
         showForks={showForks}
         setShowForks={setShowForks}
         handleLogout={handleLogout}
+        toggleLanguage={toggleLanguage}
       />
 
       {/* Main Content */}
@@ -370,7 +361,7 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
             });
             downloadMarkdown(`${repo}_report`, md);
           }}
-          className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#2d2d2d] border-2 border-black dark:border-[#aaaaaa] shadow-[2px_2px_0px_var(--pixel-border)] hover:bg-gray-200 dark:hover:bg-gray-700 text-sm font-bold active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--pixel-panel-bg)] border-2 border-[var(--pixel-border)] shadow-[2px_2px_0px_var(--pixel-border)] hover:bg-foreground/10 text-sm font-bold active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all"
         >
           <Download className="w-4 h-4" />
           Export MD
@@ -407,14 +398,14 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
           <h3 className="text-lg font-medium mb-4">{t('referrers')}</h3>
           <div className="space-y-3">
             {referrers && referrers.length > 0 ? referrers.slice(0, 5).map((ref: any, idx: number) => (
-              <div key={idx} className="flex items-center justify-between text-sm p-2 rounded hover:bg-white">
+              <div key={idx} className="flex items-center justify-between text-sm p-2 rounded hover:bg-foreground/5">
                 <span className="truncate font-medium">{ref.referrer}</span>
                 <div className="flex items-center gap-4 text-foreground/70">
                   <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {ref.count}</span>
                   <span className="flex items-center gap-1 text-pixel-purple opacity-80"><Eye className="w-3 h-3" /> {ref.uniques} uniq</span>
                 </div>
               </div>
-            )) : <p className="text-sm text-foreground/50">No referrers data available.</p>}
+            )) : <EmptyState message="No referrers data available yet." />}
           </div>
         </div>
 
@@ -422,14 +413,14 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
           <h3 className="text-lg font-medium mb-4">{t('popularPaths')}</h3>
           <div className="space-y-3">
             {paths && paths.length > 0 ? paths.slice(0, 5).map((path: any, idx: number) => (
-              <div key={idx} className="flex items-center justify-between text-sm p-2 rounded hover:bg-white">
+              <div key={idx} className="flex items-center justify-between text-sm p-2 rounded hover:bg-foreground/5">
                 <span className="truncate font-medium max-w-[200px]" title={path.title}>{path.title || path.path}</span>
                 <div className="flex items-center gap-4 text-foreground/70">
                   <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {path.count}</span>
                   <span className="flex items-center gap-1 text-pixel-blue opacity-80"><Eye className="w-3 h-3" /> {path.uniques} uniq</span>
                 </div>
               </div>
-            )) : <p className="text-sm text-foreground/50">No path data available.</p>}
+            )) : <EmptyState message="No path data available yet." />}
           </div>
         </div>
       </div>
@@ -473,7 +464,7 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-          ) : <p className="text-sm text-foreground/50">No language data available.</p>}
+          ) : <EmptyState message="No language data detected." />}
         </div>
 
         <div className="glass-panel p-6">
@@ -501,7 +492,7 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
                 </a>
               ))
             ) : (
-              <p className="text-sm text-foreground/50 text-center py-8">No recent mentions found for this repository across GitHub.</p>
+              <EmptyState message="No recent mentions found for this repository across GitHub." />
             )}
           </div>
         </div>
@@ -509,18 +500,18 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
         <div className="glass-panel p-6">
           <h3 className="text-lg font-medium mb-4">{t('projectHealth')}</h3>
           <div className="space-y-4">
-            <div className="flex justify-between items-center p-3 rounded-none border-2 border-black shadow-[2px_2px_0px_#000] bg-white">
+            <div className="flex justify-between items-center p-3 rounded-none border-2 border-[var(--pixel-border)] shadow-[2px_2px_0px_var(--pixel-border)] bg-[var(--pixel-panel-bg)]">
               <span className="text-sm">{t('openIssues')}</span>
               <span className="font-bold text-red-400 text-lg">{repoData?.open_issues_count || 0}</span>
             </div>
-            <div className="flex justify-between items-center p-3 rounded-none border-2 border-black shadow-[2px_2px_0px_#000] bg-white">
+            <div className="flex justify-between items-center p-3 rounded-none border-2 border-[var(--pixel-border)] shadow-[2px_2px_0px_var(--pixel-border)] bg-[var(--pixel-panel-bg)]">
               <span className="text-sm">{t('openPRs')}</span>
               <span className="font-bold text-green-400 text-lg">{pulls ? pulls.filter((p: any) => p.state === 'open').length : 0}</span>
             </div>
             
             <div className="mt-6 pt-4 border-t border-glass-border">
               <h4 className="text-sm font-medium mb-2">{t('conversionRate')}</h4>
-              <div className="flex justify-between text-sm p-3 rounded-none border-2 border-black shadow-[2px_2px_0px_#000] bg-white">
+              <div className="flex justify-between text-sm p-3 rounded-none border-2 border-[var(--pixel-border)] shadow-[2px_2px_0px_var(--pixel-border)] bg-[var(--pixel-panel-bg)]">
                 <span>{t('cloneConversion')}</span>
                 <span className="text-pixel-blue font-bold text-lg">
                   {views?.uniques && clones?.uniques ? Math.round((clones.uniques / views.uniques) * 100) : 0}%
@@ -624,7 +615,7 @@ function GlobalDashboard({ repos, t, activeMetric }: { repos: any[]; t: any; act
           </h3>
           <div className="space-y-3">
             {reposWithAlerts.map(repo => (
-              <div key={repo.id} className="flex items-center justify-between p-3 border-2 border-pixel-red bg-white/5">
+              <div key={repo.id} className="flex items-center justify-between p-3 border-2 border-pixel-red bg-[var(--pixel-panel-bg)]">
                 <div className="font-bold text-pixel-red">{repo.name}</div>
                 <div className="flex items-center gap-3 text-sm font-bold text-pixel-red">
                   <span>{repo.alerts.length} Security Alerts</span>
@@ -639,21 +630,21 @@ function GlobalDashboard({ repos, t, activeMetric }: { repos: any[]; t: any; act
         <h3 className="text-lg font-medium mb-4">{title}</h3>
         <div className="space-y-4">
           {displayRepos.map((repo, idx) => (
-            <div key={repo.id} className="flex items-center justify-between p-4 rounded-none border-2 border-black bg-white hover:bg-gray-100 transition-colors shadow-[4px_4px_0px_#000]">
+            <div key={repo.id} className="flex items-center justify-between p-4 rounded-none border-2 border-[var(--pixel-border)] bg-[var(--pixel-panel-bg)] hover:bg-foreground/5 transition-colors shadow-[4px_4px_0px_var(--pixel-border)]">
               <div className="flex items-center gap-4">
-                <span className="text-2xl font-bold text-gray-300 w-8">{idx + 1}</span>
+                <span className="text-2xl font-bold text-foreground/30 w-8">{idx + 1}</span>
                 <div>
                   <div className="font-medium text-lg text-pixel-blue">{repo.name}</div>
-                  <div className="text-sm text-gray-500">{repo.description || 'No description'}</div>
+                  <div className="text-sm text-foreground/60">{repo.description || 'No description'}</div>
                 </div>
               </div>
-              <div className="flex items-center gap-6 text-black">
+              <div className="flex items-center gap-6 text-foreground">
                 <div className={`flex flex-col items-end ${activeMetric === 'stars' ? 'scale-110 font-bold' : ''}`}>
-                  <span className="text-xs text-gray-500">{t('totalStars')}</span>
+                  <span className="text-xs text-foreground/60">{t('totalStars')}</span>
                   <span className="font-bold flex items-center gap-1"><Star className="w-4 h-4 text-pixel-yellow" /> {repo.stargazers_count}</span>
                 </div>
                 <div className={`flex flex-col items-end ${activeMetric === 'forks' ? 'scale-110 font-bold' : ''}`}>
-                  <span className="text-xs text-gray-500">{t('totalForks')}</span>
+                  <span className="text-xs text-foreground/60">{t('totalForks')}</span>
                   <span className="font-bold flex items-center gap-1"><GitBranch className="w-4 h-4 text-pixel-purple" /> {repo.forks_count}</span>
                 </div>
                 <div className="flex flex-col items-end">

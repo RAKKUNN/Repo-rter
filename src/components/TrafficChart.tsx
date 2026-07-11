@@ -67,7 +67,7 @@ export default function TrafficChart({ data, title }: TrafficChartProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="glass-panel p-6 border-4 border-black"
+      className="glass-panel p-6 border-4 border-[var(--pixel-border)]"
     >
       <h3 className="text-lg font-medium mb-6 uppercase tracking-wider">{title}</h3>
       <div className="h-[300px] w-full">

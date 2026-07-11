@@ -2,15 +2,15 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Globe, Moon, Sun, User, LogOut, Info, Settings as SettingsIcon, Download, Database } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from 'next-themes';
+import { useToast } from './ToastProvider';
 
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   user: any;
-  isDarkMode: boolean;
-  toggleTheme: () => void;
   toggleLanguage: () => void;
   showForks: boolean;
   setShowForks: (val: boolean) => void;
@@ -23,21 +23,26 @@ export default function SettingsModal({
   isOpen,
   onClose,
   user,
-  isDarkMode,
-  toggleTheme,
   toggleLanguage,
   showForks,
   setShowForks,
   handleLogout
 }: SettingsModalProps) {
   const { t, i18n } = useTranslation();
+  const { theme, setTheme } = useTheme();
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<TabType>('general');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const exportData = (format: 'json' | 'csv') => {
     try {
       const cacheStr = localStorage.getItem('REACT_QUERY_OFFLINE_CACHE');
       if (!cacheStr) {
-        alert('No data to export.');
+        toast('No data to export.', 'error');
         return;
       }
       const cache = JSON.parse(cacheStr);
@@ -78,9 +83,10 @@ export default function SettingsModal({
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      toast(`Successfully exported data as ${format.toUpperCase()}`, 'success');
     } catch (e) {
       console.error('Export failed', e);
-      alert('Export failed. Please check the console.');
+      toast('Export failed. Please check the console.', 'error');
     }
   };
 
@@ -203,20 +209,27 @@ export default function SettingsModal({
                 <div className="space-y-8 animate-in fade-in duration-300">
                   <section>
                     <h3 className="text-xl font-bold mb-4 border-b-2 border-foreground/20 pb-2">{t('theme')}</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                       <button 
-                        onClick={() => { if(isDarkMode) toggleTheme(); }}
-                        className={`p-6 border-2 flex flex-col items-center gap-3 transition-all ${!isDarkMode ? 'border-pixel-blue shadow-[4px_4px_0px_var(--pixel-blue)] bg-pixel-blue/10' : 'border-[var(--pixel-border)] hover:bg-foreground/5'}`}
+                        onClick={() => setTheme('light')}
+                        className={`p-6 border-2 flex flex-col items-center gap-3 transition-all ${theme === 'light' ? 'border-pixel-blue shadow-[4px_4px_0px_var(--pixel-blue)] bg-pixel-blue/10' : 'border-[var(--pixel-border)] hover:bg-foreground/5'}`}
                       >
-                        <Sun className={`w-8 h-8 ${!isDarkMode ? 'text-pixel-blue' : ''}`} />
-                        <span className="font-bold">{t('lightMode')}</span>
+                        <Sun className={`w-8 h-8 ${theme === 'light' ? 'text-pixel-blue' : ''}`} />
+                        <span className="font-bold">{t('lightMode') || 'Light'}</span>
                       </button>
                       <button 
-                        onClick={() => { if(!isDarkMode) toggleTheme(); }}
-                        className={`p-6 border-2 flex flex-col items-center gap-3 transition-all ${isDarkMode ? 'border-pixel-blue shadow-[4px_4px_0px_var(--pixel-blue)] bg-pixel-blue/10' : 'border-[var(--pixel-border)] hover:bg-foreground/5'}`}
+                        onClick={() => setTheme('dark')}
+                        className={`p-6 border-2 flex flex-col items-center gap-3 transition-all ${theme === 'dark' ? 'border-pixel-blue shadow-[4px_4px_0px_var(--pixel-blue)] bg-pixel-blue/10' : 'border-[var(--pixel-border)] hover:bg-foreground/5'}`}
                       >
-                        <Moon className={`w-8 h-8 ${isDarkMode ? 'text-pixel-blue' : ''}`} />
-                        <span className="font-bold">{t('darkMode')}</span>
+                        <Moon className={`w-8 h-8 ${theme === 'dark' ? 'text-pixel-blue' : ''}`} />
+                        <span className="font-bold">{t('darkMode') || 'Dark'}</span>
+                      </button>
+                      <button 
+                        onClick={() => setTheme('system')}
+                        className={`p-6 border-2 flex flex-col items-center gap-3 transition-all ${theme === 'system' ? 'border-pixel-blue shadow-[4px_4px_0px_var(--pixel-blue)] bg-pixel-blue/10' : 'border-[var(--pixel-border)] hover:bg-foreground/5'}`}
+                      >
+                        <SettingsIcon className={`w-8 h-8 ${theme === 'system' ? 'text-pixel-blue' : ''}`} />
+                        <span className="font-bold">{t('systemTheme') || 'System'}</span>
                       </button>
                     </div>
                   </section>

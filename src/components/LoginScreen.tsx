@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { setGithubToken } from '@/lib/auth';
 import { GitPullRequest, KeyRound, Loader2, ArrowRight, Copy, Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useToast } from './ToastProvider';
 import { customFetch, isTauri } from '@/lib/api';
 import { open as tauriOpen } from '@tauri-apps/plugin-shell';
 
@@ -12,6 +13,7 @@ const CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || '178c6fc778ccc68e1
 
 export default function LoginScreen() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [token, setToken] = useState('');
   const [loading, setLoading] = useState(false);
   
@@ -60,7 +62,7 @@ export default function LoginScreen() {
       }
     } catch (err) {
       console.error('Device flow error:', err);
-      alert('Failed to start GitHub login. Please use a PAT.');
+      toast('Failed to start GitHub login. Please use a PAT.', 'error');
     }
   };
 
@@ -96,7 +98,7 @@ export default function LoginScreen() {
         } else {
           polling = false;
           setIsPolling(false);
-          alert('Login failed or expired.');
+          toast('Login failed or expired.', 'error');
         }
       } catch (e) {
         polling = false;
@@ -121,7 +123,7 @@ export default function LoginScreen() {
         className="glass-panel w-full max-w-md p-8"
       >
         <div className="flex justify-center mb-6">
-          <div className="w-16 h-16 bg-pixel-blue/20 rounded-none border-2 border-black flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0px_#000]">
+          <div className="w-16 h-16 bg-pixel-blue/20 rounded-none border-2 border-[var(--pixel-border)] flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0px_var(--pixel-border)]">
             <GitPullRequest className="w-8 h-8 text-pixel-blue" />
           </div>
         </div>
@@ -136,7 +138,7 @@ export default function LoginScreen() {
             <button
               onClick={startDeviceFlow}
               disabled={loading}
-              className="w-full bg-pixel-purple hover:bg-pixel-purple/80 text-white font-medium py-3 px-4 rounded-none border-2 border-black shadow-[4px_4px_0px_#000] active:translate-y-1 active:translate-x-1 active:shadow-[0px_0px_0px_#000] transition-transform disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-pixel-purple hover:bg-pixel-purple/80 text-white font-medium py-3 px-4 rounded-none border-2 border-[var(--pixel-border)] shadow-[4px_4px_0px_var(--pixel-border)] active:translate-y-1 active:translate-x-1 active:shadow-[0px_0px_0px_var(--pixel-border)] transition-transform disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
