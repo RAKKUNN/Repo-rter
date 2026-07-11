@@ -6,7 +6,7 @@
 
 A beautiful, neo-brutalist / pixel-art GitHub traffic analytics tool built with Tauri and Next.js.
 
-<img src="./logo.png" width="100" />
+<img src="./public/logo.png" width="100" />
 
 ## Features
 - 📈 Track GitHub traffic infinitely (bypassing the 14-day limit)

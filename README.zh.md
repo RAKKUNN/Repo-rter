@@ -6,7 +6,7 @@
 
 一个美丽、新粗野主义/像素艺术风格的 GitHub 流量分析工具，使用 Tauri 和 Next.js 构建。
 
-<img src="./logo.png" width="100" />
+<img src="./public/logo.png" width="100" />
 
 ## 功能
 - 📈 无限跟踪 GitHub 流量（绕过 14 天限制）

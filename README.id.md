@@ -6,7 +6,7 @@
 
 Alat analitik lalu lintas GitHub bergaya neo-brutalist / pixel-art yang indah, dibangun dengan Tauri dan Next.js.
 
-<img src="./logo.png" width="100" />
+<img src="./public/logo.png" width="100" />
 
 ## Fitur
 - 📈 Lacak lalu lintas GitHub tanpa batas (melewati batas 14 hari)

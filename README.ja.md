@@ -6,7 +6,7 @@
 
 TauriとNext.jsで構築された、美しくネオブルータリズム/ピクセルアートのGitHubトラフィック分析ツール。
 
-<img src="./logo.png" width="100" />
+<img src="./public/logo.png" width="100" />
 
 ## 機能
 - 📈 GitHubトラフィックを無制限に追跡（14日間の制限を回避）

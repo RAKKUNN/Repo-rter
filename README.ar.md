@@ -6,7 +6,7 @@
 
 أداة جميلة لتحليل زيارات GitHub بواجهة بكسل / نيو بروتاليزم، مبنية باستخدام Tauri و Next.js.
 
-<img src="./logo.png" width="100" />
+<img src="./public/logo.png" width="100" />
 
 ## الميزات
 - 📈 تتبع زيارات GitHub بلا حدود (تجاوز حد 14 يومًا)

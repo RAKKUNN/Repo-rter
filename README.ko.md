@@ -6,7 +6,7 @@
 
 Tauri와 Next.js로 구축된 아름답고 직관적인 네오 브루탈리즘 / 픽셀 아트 스타일의 깃허브 트래픽 분석 툴입니다.
 
-<img src="./logo.png" width="100" />
+<img src="./public/logo.png" width="100" />
 
 ## 주요 기능
 - 📈 깃허브 트래픽 무제한 기록 (14일 제한 우회)
