@@ -45,9 +45,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_type == 'tag' && github.ref_name || 'v0.0.0-dev' }}
-          releaseName: 'Repo-rter ${{ github.ref_type == 'tag' && github.ref_name || 'Dev Build' }}'
-          releaseBody: 'See the assets below to download and install this version.'
+          tagName: "${{ github.ref_type == 'tag' && github.ref_name || 'v0.0.0-dev' }}"
+          releaseName: "Repo-rter ${{ github.ref_type == 'tag' && github.ref_name || 'Dev Build' }}"
+          releaseBody: "See the assets below to download and install this version."
           releaseDraft: true
           prerelease: false
-          args: ${{ matrix.platform == 'macos-latest' && '--target universal-apple-darwin' || '' }}
+          args: "${{ matrix.platform == 'macos-latest' && '--target universal-apple-darwin' || '' }}"
