@@ -34,9 +34,14 @@ GitHub предоставляет данные только за 14 дней. Re
 
 ## 💻 Локальная разработка
 
-Для запуска:
+### Предварительные требования
+- Node.js (v18+)
+- Rust
 
+### Установка
 ```bash
+git clone https://github.com/RAKKUNN/Repo-rter.git
+cd Repo-rter
 npm install
 npm run tauri dev
 ```

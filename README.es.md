@@ -34,10 +34,23 @@ GitHub solo ofrece 14 días de datos. Repo-rter se ejecuta en segundo plano para
 
 ## 💻 Desarrollo Local
 
-Para ejecutar la aplicación localmente:
+### Requisitos previos
+- [Node.js](https://nodejs.org/) (v18+)
+- [Rust](https://www.rust-lang.org/tools/install)
+- Dependencias de construcción (Xcode, C++ Build Tools, `libwebkit2gtk-4.0-dev`).
 
+### Instalación
+1. **Clonar repositorio:**
+```bash
+git clone https://github.com/RAKKUNN/Repo-rter.git
+cd Repo-rter
+```
+2. **Instalar dependencias:**
 ```bash
 npm install
+```
+3. **Iniciar desarrollo:**
+```bash
 npm run tauri dev
 ```
 

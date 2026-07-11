@@ -34,9 +34,14 @@ O GitHub fornece apenas 14 dias de dados. O Repo-rter guarda os seus dados infin
 
 ## 💻 Desenvolvimento
 
-Para rodar:
+### Pré-requisitos
+- Node.js (v18+)
+- Rust
 
+### Instalação
 ```bash
+git clone https://github.com/RAKKUNN/Repo-rter.git
+cd Repo-rter
 npm install
 npm run tauri dev
 ```

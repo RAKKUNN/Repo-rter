@@ -34,9 +34,14 @@ GitHub bietet nur 14 Tage Daten. Repo-rter speichert Ihre Daten unbegrenzt.
 
 ## 💻 Entwicklung
 
-So starten Sie:
+### Voraussetzungen
+- [Node.js](https://nodejs.org/) (v18+)
+- [Rust](https://www.rust-lang.org/tools/install)
 
+### Installation
 ```bash
+git clone https://github.com/RAKKUNN/Repo-rter.git
+cd Repo-rter
 npm install
 npm run tauri dev
 ```

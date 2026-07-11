@@ -34,10 +34,23 @@ GitHubは14日間のデータしか提供しません。Repo-rterはデータを
 
 ## 💻 開発
 
-ローカルで実行するには：
+### 必要なもの
+- [Node.js](https://nodejs.org/) (v18以降)
+- [Rust](https://www.rust-lang.org/tools/install) (最新版)
+- OS固有のビルドツール
 
+### インストール手順
+1. **クローン:**
+```bash
+git clone https://github.com/RAKKUNN/Repo-rter.git
+cd Repo-rter
+```
+2. **依存関係のインストール:**
 ```bash
 npm install
+```
+3. **開発サーバーの起動:**
+```bash
 npm run tauri dev
 ```
 

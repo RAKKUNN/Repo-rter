@@ -36,11 +36,30 @@ GitHub only provides 14 days of traffic analytics for your repositories. Repo-rt
 
 ## 💻 Getting Started (Local Development)
 
-To run the app locally:
+### Prerequisites
+Before you begin, ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (v18 or newer)
+- [Rust](https://www.rust-lang.org/tools/install) (latest stable)
+- OS-specific build dependencies (e.g., Xcode for macOS, C++ Build Tools for Windows, `libwebkit2gtk-4.0-dev` for Linux).
 
+### Installation
+1. **Clone the repository:**
+```bash
+git clone https://github.com/RAKKUNN/Repo-rter.git
+cd Repo-rter
+```
+2. **Install Node.js dependencies:**
 ```bash
 npm install
+```
+3. **Run the development server:**
+This will start both the Next.js frontend and the Tauri Rust backend simultaneously.
+```bash
 npm run tauri dev
+```
+4. **Build for production:**
+```bash
+npm run tauri build
 ```
 
 ## ❤️ Support

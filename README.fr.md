@@ -34,10 +34,23 @@ GitHub ne fournit que 14 jours de données. Repo-rter s'exécute en arrière-pla
 
 ## 💻 Développement Local
 
-Pour exécuter:
+### Prérequis
+- [Node.js](https://nodejs.org/) (v18+)
+- [Rust](https://www.rust-lang.org/tools/install)
+- Dépendances du système (Xcode, C++ Build Tools, `libwebkit2gtk-4.0-dev`).
 
+### Installation
+1. **Cloner:**
+```bash
+git clone https://github.com/RAKKUNN/Repo-rter.git
+cd Repo-rter
+```
+2. **Installer:**
 ```bash
 npm install
+```
+3. **Démarrer:**
+```bash
 npm run tauri dev
 ```
 

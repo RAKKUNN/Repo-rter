@@ -34,9 +34,14 @@ GitHub hanya menyediakan 14 hari data. Repo-rter menyimpannya tanpa batas.
 
 ## 💻 Memulai
 
-Untuk menjalankan:
+### Prasyarat
+- Node.js (v18+)
+- Rust
 
+### Instalasi
 ```bash
+git clone https://github.com/RAKKUNN/Repo-rter.git
+cd Repo-rter
 npm install
 npm run tauri dev
 ```

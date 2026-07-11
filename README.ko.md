@@ -36,11 +36,30 @@ Tauri와 Next.js로 구축된 아름답고 직관적인 네오 브루탈리즘 /
 
 ## 💻 로컬 개발 시작하기
 
-로컬 환경에서 앱을 실행하는 방법입니다:
+### 사전 준비
+개발 환경을 구축하기 위해 다음 소프트웨어들이 필요합니다:
+- [Node.js](https://nodejs.org/) (v18 이상)
+- [Rust](https://www.rust-lang.org/tools/install) (최신 안정화 버전)
+- 운영체제별 빌드 도구 (macOS: Xcode, Windows: C++ Build Tools, Linux: `libwebkit2gtk-4.0-dev`).
 
+### 설치 및 실행
+1. **레포지토리 클론:**
+```bash
+git clone https://github.com/RAKKUNN/Repo-rter.git
+cd Repo-rter
+```
+2. **의존성 패키지 설치:**
 ```bash
 npm install
+```
+3. **개발 서버 실행:**
+Next.js 프론트엔드와 Tauri 백엔드가 함께 실행됩니다.
+```bash
 npm run tauri dev
+```
+4. **프로덕션 빌드:**
+```bash
+npm run tauri build
 ```
 
 ## ❤️ 후원하기

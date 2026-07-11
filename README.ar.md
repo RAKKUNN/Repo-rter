@@ -34,9 +34,14 @@
 
 ## 💻 التطوير المحلي
 
-لتشغيل التطبيق:
+### المتطلبات الأساسية
+- Node.js (v18+)
+- Rust
 
+### التثبيت
 ```bash
+git clone https://github.com/RAKKUNN/Repo-rter.git
+cd Repo-rter
 npm install
 npm run tauri dev
 ```
