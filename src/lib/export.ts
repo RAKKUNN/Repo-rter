@@ -6,7 +6,8 @@ export function generateMarkdownReport({
   paths,
   languages,
   openIssues,
-  openPulls
+  openPulls,
+  releases
 }: {
   repoName: string;
   views: any;
@@ -16,6 +17,7 @@ export function generateMarkdownReport({
   languages: Record<string, number>;
   openIssues: number;
   openPulls: number;
+  releases?: any[];
 }) {
   const date = new Date().toLocaleDateString();
   
@@ -61,6 +63,29 @@ export function generateMarkdownReport({
       md += `| ${cleanTitle} | ${path.count} | ${path.uniques} |\n`;
     }
     md += `\n`;
+  }
+
+  if (releases && releases.length > 0) {
+    const totalDownloads = releases.reduce((sum, release) => {
+      return sum + release.assets.reduce((assetSum: number, asset: any) => assetSum + asset.download_count, 0);
+    }, 0);
+    
+    md += `## 📦 Releases & Downloads (Total: ${totalDownloads})\n`;
+    for (const release of releases) {
+      const releaseName = release.name || release.tag_name;
+      const date = new Date(release.published_at).toLocaleDateString();
+      md += `### ${releaseName} (${date})\n`;
+      if (release.assets && release.assets.length > 0) {
+        md += `| Asset | Downloads |\n`;
+        md += `| :--- | :---: |\n`;
+        for (const asset of release.assets) {
+          md += `| ${asset.name} | **${asset.download_count}** |\n`;
+        }
+      } else {
+        md += `*No assets published for this release.*\n`;
+      }
+      md += `\n`;
+    }
   }
 
   md += `---\n`;

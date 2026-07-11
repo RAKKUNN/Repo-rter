@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useQueries } from '@tanstack/react-query';
-import { getUser, getRepos, getRepoTrafficViews, getRepoTrafficClones, getRepoTrafficPaths, getRepoTrafficReferrers, getRepoLanguages, getRepoIssues, getRepoPulls, getRepoAlerts, getRepoMentions } from '@/lib/github';
+import { getUser, getRepos, getRepoTrafficViews, getRepoTrafficClones, getRepoTrafficPaths, getRepoTrafficReferrers, getRepoLanguages, getRepoIssues, getRepoPulls, getRepoAlerts, getRepoMentions, getRepoReleases } from '@/lib/github';
 import { removeGithubToken } from '@/lib/auth';
 import { open } from '@tauri-apps/plugin-shell';
 import { isTauri } from '@tauri-apps/api/core';
@@ -321,6 +321,11 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
     queryFn: () => getRepoIssues(owner, repo),
   });
 
+  const { data: releases, isLoading: loadingReleases } = useQuery({
+    queryKey: ['releases', owner, repo],
+    queryFn: () => getRepoReleases(owner, repo),
+  });
+
   if (loadingViews || loadingClones) {
     return (
       <div className="glass-panel p-12 flex justify-center">
@@ -335,6 +340,10 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
   
   const allTimeClonesCount = clones?.clones?.reduce((sum: number, v: any) => sum + v.count, 0) || 0;
   const allTimeClonesUniques = clones?.clones?.reduce((sum: number, v: any) => sum + v.uniques, 0) || 0;
+
+  const allTimeDownloads = releases?.reduce((sum: number, release: any) => {
+    return sum + release.assets.reduce((assetSum: number, asset: any) => assetSum + asset.download_count, 0);
+  }, 0) || 0;
 
   return (
     <motion.div
@@ -357,7 +366,8 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
               paths: paths || [],
               languages: languages || {},
               openIssues: repoData?.open_issues_count || 0,
-              openPulls: pulls ? pulls.filter((p: any) => p.state === 'open').length : 0
+              openPulls: pulls ? pulls.filter((p: any) => p.state === 'open').length : 0,
+              releases: releases || []
             });
             downloadMarkdown(`${repo}_report`, md);
           }}
@@ -368,7 +378,7 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
         </button>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <MetricCard 
           title={`${t('views')} (All Time)`} 
           value={allTimeViewsCount} 
@@ -380,6 +390,12 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
           value={allTimeClonesCount} 
           icon={GitPullRequest} 
           trend={{ value: allTimeClonesUniques, isUp: true }}
+        />
+        <MetricCard 
+          title={`${t('downloads')} (All Time)`} 
+          value={allTimeDownloads} 
+          icon={Download} 
+          trend={{ value: releases?.length || 0, isUp: true }}
         />
       </div>
 
@@ -422,6 +438,48 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
               </div>
             )) : <EmptyState message="No path data available yet." />}
           </div>
+        </div>
+      </div>
+
+      {/* Releases and Downloads */}
+      <div className="glass-panel p-6">
+        <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+          <Download className="w-5 h-5 text-pixel-blue" />
+          Releases & Downloads
+        </h3>
+        <div className="space-y-4">
+          {loadingReleases ? (
+            <div className="flex justify-center p-4">
+              <Loader2 className="w-6 h-6 animate-spin text-pixel-blue" />
+            </div>
+          ) : releases && releases.length > 0 ? (
+            releases.map((release: any) => (
+              <div key={release.id} className="flex flex-col sm:flex-row sm:items-start justify-between p-4 border-2 border-[var(--pixel-border)] bg-[var(--pixel-panel-bg)] shadow-[2px_2px_0px_var(--pixel-border)]">
+                <div className="mb-3 sm:mb-0">
+                  <div className="font-bold text-lg">{release.name || release.tag_name}</div>
+                  <div className="text-xs opacity-60">
+                    Published: {new Date(release.published_at).toLocaleDateString()}
+                  </div>
+                </div>
+                <div className="flex-1 w-full sm:w-auto sm:ml-8">
+                  {release.assets.length > 0 ? (
+                    <div className="space-y-2">
+                      {release.assets.map((asset: any) => (
+                        <div key={asset.id} className="flex items-center justify-between text-sm bg-foreground/5 p-2 rounded">
+                          <span className="truncate max-w-[200px] md:max-w-[300px]" title={asset.name}>{asset.name}</span>
+                          <span className="font-bold text-pixel-blue shrink-0">{asset.download_count} dls</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-sm opacity-50 sm:text-right">No assets</div>
+                  )}
+                </div>
+              </div>
+            ))
+          ) : (
+            <EmptyState message="No releases found." />
+          )}
         </div>
       </div>
 

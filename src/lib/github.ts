@@ -207,3 +207,35 @@ export async function getRepoMentions(repoName: string) {
     return { items: [] };
   }
 }
+
+export async function getRepoReleases(owner: string, repo: string) {
+  if (MOCK_DATA) {
+    return [
+      {
+        id: 1,
+        name: 'v1.0.0',
+        tag_name: 'v1.0.0',
+        published_at: new Date().toISOString(),
+        assets: [
+          { id: 101, name: 'app-setup.exe', download_count: 1420 },
+          { id: 102, name: 'app-mac.dmg', download_count: 850 },
+          { id: 103, name: 'app-linux.deb', download_count: 320 }
+        ]
+      },
+      {
+        id: 2,
+        name: 'v0.9.0',
+        tag_name: 'v0.9.0',
+        published_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+        assets: [
+          { id: 201, name: 'app-setup.exe', download_count: 890 },
+          { id: 202, name: 'app-mac.dmg', download_count: 510 }
+        ]
+      }
+    ];
+  }
+  const headers = getAuthHeaders();
+  const res = await customFetch(`https://api.github.com/repos/${owner}/${repo}/releases?per_page=100`, { headers });
+  if (!res.ok) return [];
+  return res.json();
+}
