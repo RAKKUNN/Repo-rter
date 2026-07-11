@@ -439,14 +439,9 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
         <div className="glass-panel p-6">
           <h3 className="text-lg font-medium mb-4">{t('languages')}</h3>
           {languages && Object.keys(languages).length > 0 ? (
-            <div className="h-64">
+            <div className="h-64 drop-shadow-[4px_4px_0px_var(--pixel-border)]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <defs>
-                    <filter id="pieShadow" x="-20%" y="-20%" width="140%" height="140%">
-                      <feDropShadow dx="4" dy="4" stdDeviation="0" floodColor="var(--pixel-border)" floodOpacity="1" />
-                    </filter>
-                  </defs>
                   <Pie
                     data={Object.entries(languages).map(([name, value]) => ({ name, value: Number(value) }))}
                     cx="50%"
@@ -456,8 +451,7 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
                     paddingAngle={0}
                     dataKey="value"
                     stroke="var(--pixel-border)"
-                    strokeWidth={3}
-                    filter="url(#pieShadow)"
+                    strokeWidth={2}
                   >
                     {Object.entries(languages).map((entry, index) => (
                       <Cell 
@@ -471,7 +465,6 @@ function RepoDetails({ repoData, t }: { repoData: any; t: any }) {
                       backgroundColor: 'var(--pixel-panel-bg)', 
                       border: '3px solid var(--pixel-border)',
                       borderRadius: '0px',
-                      boxShadow: '4px 4px 0px var(--pixel-border)',
                       color: 'var(--color-foreground)',
                       fontFamily: 'var(--font-pixel)'
                     }}
