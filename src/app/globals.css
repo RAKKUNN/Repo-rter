@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+:root {
+  /* Pixel Art Theme Variables */
+  --background: #F5F5F5; 
+  --foreground: #1A1A1A;
+
+  /* Retro Arcade Colors */
+  --pixel-blue: #3b82f6;
+  --pixel-purple: #8b5cf6;
+  --pixel-green: #10b981;
+  --pixel-red: #ef4444;
+  --pixel-yellow: #f59e0b;
+
+  --pixel-panel-bg: #F5F5F5;
+  --pixel-border: #1A1A1A;
+  --dot-color: #e5e5e5;
+}
+
+.dark {
+  --background: #1A1A1A; 
+  --foreground: #F5F5F5;
+  --pixel-panel-bg: #1A1A1A;
+  --pixel-border: #F5F5F5;
+  --dot-color: #222222;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  --color-neon-blue: var(--pixel-blue);
+  --color-neon-purple: var(--pixel-purple);
+  --color-neon-green: var(--pixel-green);
+
+  --color-pixel-blue: var(--pixel-blue);
+  --color-pixel-purple: var(--pixel-purple);
+  --color-pixel-green: var(--pixel-green);
+  --color-pixel-red: var(--pixel-red);
+  --color-pixel-yellow: var(--pixel-yellow);
+
+  --color-glass: var(--pixel-panel-bg);
+  --color-glass-border: var(--pixel-border);
+
+  --font-sans: var(--font-pixel), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  background-image: 
+    radial-gradient(var(--dot-color) 1px, transparent 1px),
+    radial-gradient(var(--dot-color) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  background-attachment: fixed;
+  
+  /* Make it feel like a native app by disabling text selection */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  
+  /* Prevent macOS rubber-band bounce effect on scroll */
+  overscroll-behavior: none;
+  
+  /* Remove tap highlight color on touch/click */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Custom Scrollbar to hide default browser scrollbars but keep functionality */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--pixel-border);
+  border-radius: 0;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Remove focus outlines globally to prevent blue default rings */
+*:focus {
+  outline: none !important;
+}
+
+/* Prevent image dragging entirely */
+img, a {
+  -webkit-user-drag: none;
+}
+
+/* Re-enable selection for specific areas if needed */
+.selectable-text {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* Pixel Art Utilities (Replacing Glassmorphism) */
+@layer utilities {
+  .glass-panel {
+    @apply bg-transparent border-2 border-transparent dark:border-transparent rounded-none;
+    box-shadow: 6px 6px 0px var(--pixel-border);
+    border-color: var(--pixel-border);
+    background-color: var(--pixel-panel-bg);
+  }
+  
+  .glass-panel-hover {
+    @apply transition-transform duration-75 hover:-translate-y-1 hover:-translate-x-1 cursor-pointer active:translate-y-1 active:translate-x-1;
+  }
+  
+  .text-gradient {
+    /* No gradient for retro, just solid retro color with text shadow */
+    @apply text-pixel-blue;
+    text-shadow: 2px 2px 0px var(--pixel-border);
+  }
+}
