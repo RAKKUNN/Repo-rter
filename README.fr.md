@@ -32,6 +32,9 @@ GitHub ne fournit que 14 jours de données. Repo-rter s'exécute en arrière-pla
 - **Frontend**: Next.js
 - **Backend**: Tauri
 
+## ⬇️ Installation
+Téléchargez l'installateur (.exe, .dmg, .deb) depuis la [page Releases](https://github.com/RAKKUNN/Repo-rter/releases/latest).
+
 ## 💻 Développement Local
 
 ### Prérequis
@@ -39,7 +42,7 @@ GitHub ne fournit que 14 jours de données. Repo-rter s'exécute en arrière-pla
 - [Rust](https://www.rust-lang.org/tools/install)
 - Dépendances du système (Xcode, C++ Build Tools, `libwebkit2gtk-4.0-dev`).
 
-### Installation
+### Démarrer
 1. **Cloner:**
 ```bash
 git clone https://github.com/RAKKUNN/Repo-rter.git

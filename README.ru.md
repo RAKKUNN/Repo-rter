@@ -32,6 +32,9 @@ GitHub предоставляет данные только за 14 дней. Re
 - **Frontend**: Next.js
 - **Backend**: Tauri
 
+## ⬇️ Установка
+Скачайте установщик со страницы [Releases](https://github.com/RAKKUNN/Repo-rter/releases/latest).
+
 ## 💻 Локальная разработка
 
 ### Предварительные требования

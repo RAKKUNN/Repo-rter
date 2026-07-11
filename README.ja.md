@@ -32,14 +32,20 @@ GitHubは14日間のデータしか提供しません。Repo-rterはデータを
 - **Frontend**: Next.js
 - **Backend**: Tauri
 
-## 💻 開発
+## ⬇️ インストール方法
+自分でビルドする必要はありません！
+1. [Releases ページ](https://github.com/RAKKUNN/Repo-rter/releases/latest)にアクセスします。
+2. OSに合ったインストーラー（.dmg, .exe, .deb）をダウンロードします。
+3. インストーラーを実行してアプリを使用します。
+
+## 💻 ローカル開発 (開発者向け)
 
 ### 必要なもの
 - [Node.js](https://nodejs.org/) (v18以降)
 - [Rust](https://www.rust-lang.org/tools/install) (最新版)
 - OS固有のビルドツール
 
-### インストール手順
+### ビルドと実行
 1. **クローン:**
 ```bash
 git clone https://github.com/RAKKUNN/Repo-rter.git

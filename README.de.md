@@ -32,7 +32,10 @@ GitHub bietet nur 14 Tage Daten. Repo-rter speichert Ihre Daten unbegrenzt.
 - **Frontend**: Next.js
 - **Backend**: Tauri
 
-## 💻 Entwicklung
+## ⬇️ Installation
+Laden Sie es von der [Releases-Seite](https://github.com/RAKKUNN/Repo-rter/releases/latest) herunter.
+
+## 💻 Lokale Entwicklung
 
 ### Voraussetzungen
 - [Node.js](https://nodejs.org/) (v18+)

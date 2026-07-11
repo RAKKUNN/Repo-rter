@@ -34,7 +34,16 @@ GitHub only provides 14 days of traffic analytics for your repositories. Repo-rt
 - **State Management**: React Query with offline local storage caching
 - **Deployment**: GitHub Actions for cross-platform automated release building
 
-## 💻 Getting Started (Local Development)
+## ⬇️ Installation (For Users)
+You don't need to build from source! Just download the latest installer for your OS:
+1. Go to the [Releases page](https://github.com/RAKKUNN/Repo-rter/releases/latest).
+2. Download the installer for your system:
+   - **macOS**: `Repo-rter_x.x.x_aarch64.dmg` or `x64.dmg`
+   - **Windows**: `Repo-rter_x.x.x_x64-setup.exe`
+   - **Linux**: `repo-rter_x.x.x_amd64.deb`
+3. Run the installer and launch the app.
+
+## 💻 Local Development (For Developers)
 
 ### Prerequisites
 Before you begin, ensure you have the following installed:
@@ -42,7 +51,7 @@ Before you begin, ensure you have the following installed:
 - [Rust](https://www.rust-lang.org/tools/install) (latest stable)
 - OS-specific build dependencies (e.g., Xcode for macOS, C++ Build Tools for Windows, `libwebkit2gtk-4.0-dev` for Linux).
 
-### Installation
+### Build & Run
 1. **Clone the repository:**
 ```bash
 git clone https://github.com/RAKKUNN/Repo-rter.git

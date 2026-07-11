@@ -32,6 +32,9 @@
 - **Frontend**: Next.js
 - **Backend**: Tauri
 
+## ⬇️ التثبيت
+حمل التطبيق من صفحة [Releases](https://github.com/RAKKUNN/Repo-rter/releases/latest).
+
 ## 💻 التطوير المحلي
 
 ### المتطلبات الأساسية

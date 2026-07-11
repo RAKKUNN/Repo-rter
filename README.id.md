@@ -32,7 +32,10 @@ GitHub hanya menyediakan 14 hari data. Repo-rter menyimpannya tanpa batas.
 - **Frontend**: Next.js
 - **Backend**: Tauri
 
-## 💻 Memulai
+## ⬇️ Instalasi
+Unduh dari halaman [Releases](https://github.com/RAKKUNN/Repo-rter/releases/latest).
+
+## 💻 Pengembangan Lokal
 
 ### Prasyarat
 - Node.js (v18+)

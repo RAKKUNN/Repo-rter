@@ -32,13 +32,16 @@
 - **Frontend**: Next.js
 - **Backend**: Tauri
 
-## 💻 शुरू करना
+## ⬇️ स्थापना
+[Releases](https://github.com/RAKKUNN/Repo-rter/releases/latest) पेज से इंस्टॉलर (.exe, .dmg, .deb) डाउनलोड करें।
+
+## 💻 स्थानीय विकास
 
 ### आवश्यकताएँ
 - Node.js (v18+)
 - Rust
 
-### स्थापना
+### विकास
 ```bash
 git clone https://github.com/RAKKUNN/Repo-rter.git
 cd Repo-rter

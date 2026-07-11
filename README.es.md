@@ -32,6 +32,11 @@ GitHub solo ofrece 14 días de datos. Repo-rter se ejecuta en segundo plano para
 - **Frontend**: Next.js, React
 - **Backend**: Tauri (Rust)
 
+## ⬇️ Instalación
+1. Ve a [Releases](https://github.com/RAKKUNN/Repo-rter/releases/latest).
+2. Descarga el archivo para tu SO (.dmg, .exe, .deb).
+3. Instala y ejecuta la aplicación.
+
 ## 💻 Desarrollo Local
 
 ### Requisitos previos
@@ -39,7 +44,7 @@ GitHub solo ofrece 14 días de datos. Repo-rter se ejecuta en segundo plano para
 - [Rust](https://www.rust-lang.org/tools/install)
 - Dependencias de construcción (Xcode, C++ Build Tools, `libwebkit2gtk-4.0-dev`).
 
-### Instalación
+### Compilar
 1. **Clonar repositorio:**
 ```bash
 git clone https://github.com/RAKKUNN/Repo-rter.git

@@ -32,7 +32,10 @@ O GitHub fornece apenas 14 dias de dados. O Repo-rter guarda os seus dados infin
 - **Frontend**: Next.js
 - **Backend**: Tauri
 
-## 💻 Desenvolvimento
+## ⬇️ Instalação
+Faça o download na página de [Releases](https://github.com/RAKKUNN/Repo-rter/releases/latest).
+
+## 💻 Desenvolvimento Local
 
 ### Pré-requisitos
 - Node.js (v18+)
