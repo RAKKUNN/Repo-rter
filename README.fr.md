@@ -6,9 +6,17 @@
 
 Un magnifique outil d'analyse de trafic GitHub construit avec Tauri et Next.js.
 
-<img src="./public/logo.png" width="100" />
-<br/>
-<img src="./public/screenshot.png" width="800" />
+<div align="center">
+  <img src="./public/logo.png" width="100" />
+</div>
+
+## 📸 Screenshots
+
+| Dashboard Overview | Global Traffic Timeline |
+| :---: | :---: |
+| <img src="./public/screenshots/overview.png" width="400"/> | <img src="./public/screenshots/global_traffic.png" width="400"/> |
+| **Repository Details** | **Analytics Breakdown** |
+| <img src="./public/screenshots/repo_traffic.png" width="400"/> | <img src="./public/screenshots/details.png" width="400"/> |
 
 ## 📖 À propos de Repo-rter
 GitHub ne fournit que 14 jours de données. Repo-rter s'exécute en arrière-plan pour sauvegarder vos données indéfiniment.

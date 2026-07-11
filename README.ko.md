@@ -6,9 +6,17 @@
 
 Tauri와 Next.js로 구축된 아름답고 직관적인 네오 브루탈리즘 / 픽셀 아트 스타일의 깃허브 트래픽 분석 툴입니다.
 
-<img src="./public/logo.png" width="100" />
-<br/>
-<img src="./public/screenshot.png" width="800" />
+<div align="center">
+  <img src="./public/logo.png" width="100" />
+</div>
+
+## 📸 Screenshots
+
+| Dashboard Overview | Global Traffic Timeline |
+| :---: | :---: |
+| <img src="./public/screenshots/overview.png" width="400"/> | <img src="./public/screenshots/global_traffic.png" width="400"/> |
+| **Repository Details** | **Analytics Breakdown** |
+| <img src="./public/screenshots/repo_traffic.png" width="400"/> | <img src="./public/screenshots/details.png" width="400"/> |
 
 ## 📖 Repo-rter 소개
 깃허브는 기본적으로 단 14일 동안의 트래픽 데이터만 제공합니다. Repo-rter는 백그라운드에서 주기적으로 트래픽을 수집하여 로컬에 무제한으로 저장합니다. 이제 소중한 방문자 및 클론 데이터를 잃어버리지 마세요!

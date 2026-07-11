@@ -6,9 +6,17 @@
 
 टौरी और नेक्स्ट.जेएस के साथ निर्मित एक सुंदर गिटहब ट्रैफ़िक एनालिटिक्स टूल।
 
-<img src="./public/logo.png" width="100" />
-<br/>
-<img src="./public/screenshot.png" width="800" />
+<div align="center">
+  <img src="./public/logo.png" width="100" />
+</div>
+
+## 📸 Screenshots
+
+| Dashboard Overview | Global Traffic Timeline |
+| :---: | :---: |
+| <img src="./public/screenshots/overview.png" width="400"/> | <img src="./public/screenshots/global_traffic.png" width="400"/> |
+| **Repository Details** | **Analytics Breakdown** |
+| <img src="./public/screenshots/repo_traffic.png" width="400"/> | <img src="./public/screenshots/details.png" width="400"/> |
 
 ## 📖 Repo-rter के बारे में
 गिटहब केवल 14 दिनों का डेटा देता है। Repo-rter बैकग्राउंड में चलता है और आपके डेटा को असीमित रूप से सहेजता है।

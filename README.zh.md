@@ -6,9 +6,17 @@
 
 一个美丽、新粗野主义/像素艺术风格的 GitHub 流量分析工具，使用 Tauri 和 Next.js 构建。
 
-<img src="./public/logo.png" width="100" />
-<br/>
-<img src="./public/screenshot.png" width="800" />
+<div align="center">
+  <img src="./public/logo.png" width="100" />
+</div>
+
+## 📸 Screenshots
+
+| Dashboard Overview | Global Traffic Timeline |
+| :---: | :---: |
+| <img src="./public/screenshots/overview.png" width="400"/> | <img src="./public/screenshots/global_traffic.png" width="400"/> |
+| **Repository Details** | **Analytics Breakdown** |
+| <img src="./public/screenshots/repo_traffic.png" width="400"/> | <img src="./public/screenshots/details.png" width="400"/> |
 
 ## 📖 关于 Repo-rter
 GitHub 仅提供 14 天的流量数据。Repo-rter 在后台持续运行，无限期地跟踪并将数据保存在本地。
