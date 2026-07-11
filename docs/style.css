@@ -58,8 +58,43 @@ header {
 .hero-subtitle {
   font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   color: #333;
+}
+
+.header-links {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: var(--text-color);
+  text-decoration: none;
+  border: 2px solid var(--text-color);
+  background-color: #fff;
+  box-shadow: 3px 3px 0 var(--text-color);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.btn-link:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--text-color);
+}
+
+.sponsor-link {
+  color: #ea4aaa;
+}
+.sponsor-link svg {
+  stroke: #ea4aaa;
+  fill: #ea4aaa;
 }
 
 .downloads {

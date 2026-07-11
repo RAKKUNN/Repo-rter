@@ -8,14 +8,23 @@ A beautiful, neo-brutalist / pixel-art GitHub traffic analytics tool built with 
 
 <img src="./public/logo.png" width="100" />
 
-## Features
+## 📖 About Repo-rter
+GitHub only provides 14 days of traffic analytics for your repositories. Repo-rter solves this by continuously running in the background of your desktop to infinitely track and store your repository views, clones, and stars locally. You never lose your data again!
+
+## 🚀 Features
 - 📈 Track GitHub traffic infinitely (bypassing the 14-day limit)
 - 🎨 Neo-brutalist / Pixel-art UI
 - 🔄 Desktop app with system tray & background syncing via Cron
 - 💾 Export data to CSV and JSON
 - 🌐 Supports 12 languages
 
-## Getting Started
+## 🛠️ Technology Stack
+- **Frontend**: Next.js (Static Export), React, TailwindCSS
+- **Backend**: Tauri (Rust)
+- **State Management**: React Query with offline local storage caching
+- **Deployment**: GitHub Actions for cross-platform automated release building
+
+## 💻 Getting Started (Local Development)
 
 To run the app locally:
 
@@ -23,3 +32,6 @@ To run the app locally:
 npm install
 npm run tauri dev
 ```
+
+## ❤️ Support
+If you find this project useful, please consider [sponsoring me on GitHub](https://github.com/sponsors/RAKKUNN) or starring the repository!

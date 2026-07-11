@@ -4,18 +4,25 @@
 
 ---
 
-Una hermosa herramienta de análisis de tráfico de GitHub con estilo neo-brutalista / pixel-art, construida con Tauri y Next.js.
+Una hermosa herramienta de análisis de tráfico de GitHub con estilo neo-brutalista / pixel-art.
 
 <img src="./public/logo.png" width="100" />
 
-## Características
-- 📈 Rastrea el tráfico de GitHub infinitamente (evitando el límite de 14 días)
-- 🎨 Interfaz Neo-brutalista / Pixel-art
-- 🔄 Aplicación de escritorio con bandeja del sistema y sincronización en segundo plano
-- 💾 Exportar datos a CSV y JSON
+## 📖 Acerca de Repo-rter
+GitHub solo ofrece 14 días de datos. Repo-rter se ejecuta en segundo plano para almacenar tus datos infinitamente.
+
+## 🚀 Características
+- 📈 Rastrea el tráfico infinitamente
+- 🎨 Interfaz Neo-brutalista
+- 🔄 Sincronización en segundo plano
+- 💾 Exportar a CSV y JSON
 - 🌐 Soporta 12 idiomas
 
-## Empezando
+## 🛠️ Tecnología
+- **Frontend**: Next.js, React
+- **Backend**: Tauri (Rust)
+
+## 💻 Desarrollo Local
 
 Para ejecutar la aplicación localmente:
 
@@ -23,3 +30,6 @@ Para ejecutar la aplicación localmente:
 npm install
 npm run tauri dev
 ```
+
+## ❤️ Apoyar
+¡Si este proyecto te resulta útil, considera [patrocinarme en GitHub](https://github.com/sponsors/RAKKUNN)!

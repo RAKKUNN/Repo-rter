@@ -4,22 +4,32 @@
 
 ---
 
-Alat analitik lalu lintas GitHub bergaya neo-brutalist / pixel-art yang indah, dibangun dengan Tauri dan Next.js.
+Alat analitik lalu lintas GitHub yang indah.
 
 <img src="./public/logo.png" width="100" />
 
-## Fitur
-- 📈 Lacak lalu lintas GitHub tanpa batas (melewati batas 14 hari)
-- 🎨 UI Neo-brutalist / Pixel-art
-- 🔄 Aplikasi desktop dengan system tray & sinkronisasi latar belakang
-- 💾 Ekspor data ke CSV dan JSON
-- 🌐 Mendukung 12 bahasa
+## 📖 Tentang Repo-rter
+GitHub hanya menyediakan 14 hari data. Repo-rter menyimpannya tanpa batas.
 
-## Memulai
+## 🚀 Fitur
+- 📈 Pelacakan tanpa batas
+- 🎨 UI Pixel-art
+- 🔄 Sinkronisasi latar belakang
+- 💾 Ekspor CSV
+- 🌐 12 bahasa
 
-Untuk menjalankan aplikasi secara lokal:
+## 🛠️ Teknologi
+- **Frontend**: Next.js
+- **Backend**: Tauri
+
+## 💻 Memulai
+
+Untuk menjalankan:
 
 ```bash
 npm install
 npm run tauri dev
 ```
+
+## ❤️ Sponsor
+Pertimbangkan untuk [mensponsori saya](https://github.com/sponsors/RAKKUNN)!

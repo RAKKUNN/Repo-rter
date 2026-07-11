@@ -8,14 +8,21 @@
 
 <img src="./public/logo.png" width="100" />
 
-## 功能
+## 📖 关于 Repo-rter
+GitHub 仅提供 14 天的流量数据。Repo-rter 在后台持续运行，无限期地跟踪并将数据保存在本地。
+
+## 🚀 功能
 - 📈 无限跟踪 GitHub 流量（绕过 14 天限制）
 - 🎨 新粗野主义 / 像素艺术 UI
 - 🔄 带有系统托盘和后台同步的桌面应用
 - 💾 将数据导出为 CSV 和 JSON
 - 🌐 支持 12 种语言
 
-## 入门
+## 🛠️ 技术栈
+- **前端**: Next.js, React, TailwindCSS
+- **后端**: Tauri (Rust)
+
+## 💻 本地开发
 
 在本地运行应用程序：
 
@@ -23,3 +30,6 @@
 npm install
 npm run tauri dev
 ```
+
+## ❤️ 支持与赞助
+如果您觉得这个项目有用，请考虑在 [GitHub Sponsors](https://github.com/sponsors/RAKKUNN) 上赞助我！
