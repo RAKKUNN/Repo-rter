@@ -31,23 +31,25 @@ export default function GlobalTrafficChart({ data, keys }: GlobalTrafficChartPro
       <h3 className="text-lg font-medium mb-6">Global Stacked Timeline (All-Time)</h3>
       <div className="h-[350px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#ccc" vertical={false} />
+          <AreaChart data={data} margin={{ top: 10, right: 0, left: -10, bottom: 0 }}>
+            <CartesianGrid stroke="var(--pixel-border)" strokeWidth={1} vertical={true} />
             <XAxis 
               dataKey="date" 
               stroke="var(--color-foreground)" 
-              fontSize={14}
+              fontSize={12}
               fontFamily="var(--font-pixel)"
               tickLine={false}
-              axisLine={false}
+              axisLine={{ stroke: 'var(--pixel-border)', strokeWidth: 3 }}
+              tickMargin={10}
             />
             <YAxis 
               stroke="var(--color-foreground)" 
-              fontSize={14}
+              fontSize={12}
               fontFamily="var(--font-pixel)"
               tickLine={false}
-              axisLine={false}
+              axisLine={{ stroke: 'var(--pixel-border)', strokeWidth: 3 }}
               tickFormatter={(value) => value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value}
+              tickMargin={10}
             />
             <Tooltip 
               contentStyle={{ 

@@ -8,7 +8,8 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid
+  CartesianGrid,
+  Legend
 } from 'recharts';
 
 interface TrafficChartProps {
@@ -22,13 +23,14 @@ const CustomizedDot = (props: any) => {
   if (!cx || !cy) return null;
   return (
     <rect 
-      x={cx - 4} 
-      y={cy - 4} 
-      width={8} 
-      height={8} 
+      x={cx - 5} 
+      y={cy - 5} 
+      width={10} 
+      height={10} 
       fill={stroke} 
       stroke="var(--pixel-border)" 
-      strokeWidth={2} 
+      strokeWidth={3} 
+      filter="url(#neoShadow)"
     />
   );
 };
@@ -38,13 +40,14 @@ const CustomizedActiveDot = (props: any) => {
   if (!cx || !cy) return null;
   return (
     <rect 
-      x={cx - 6} 
-      y={cy - 6} 
-      width={12} 
-      height={12} 
+      x={cx - 7} 
+      y={cy - 7} 
+      width={14} 
+      height={14} 
       fill={stroke} 
       stroke="var(--pixel-border)" 
-      strokeWidth={2} 
+      strokeWidth={3} 
+      filter="url(#neoShadow)"
     />
   );
 };
@@ -64,38 +67,40 @@ export default function TrafficChart({ data, title }: TrafficChartProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="glass-panel p-6"
+      className="glass-panel p-6 border-4 border-black"
     >
-      <h3 className="text-lg font-medium mb-6">{title}</h3>
+      <h3 className="text-lg font-medium mb-6 uppercase tracking-wider">{title}</h3>
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={formattedData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+          <LineChart data={formattedData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
             <defs>
               <filter id="neoShadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="4" dy="4" stdDeviation="0" floodColor="var(--pixel-border)" floodOpacity="1" />
+                <feDropShadow dx="3" dy="3" stdDeviation="0" floodColor="var(--pixel-border)" floodOpacity="1" />
               </filter>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#ccc" vertical={false} />
+            <CartesianGrid stroke="var(--pixel-border)" strokeWidth={1} vertical={true} />
             <XAxis 
               dataKey="displayDate" 
               stroke="var(--color-foreground)" 
-              fontSize={14}
+              fontSize={12}
               fontFamily="var(--font-pixel)"
               tickLine={false}
-              axisLine={{ stroke: 'var(--pixel-border)', strokeWidth: 2 }}
+              axisLine={{ stroke: 'var(--pixel-border)', strokeWidth: 3 }}
+              tickMargin={10}
             />
             <YAxis 
               stroke="var(--color-foreground)" 
-              fontSize={14}
+              fontSize={12}
               fontFamily="var(--font-pixel)"
               tickLine={false}
-              axisLine={{ stroke: 'var(--pixel-border)', strokeWidth: 2 }}
+              axisLine={{ stroke: 'var(--pixel-border)', strokeWidth: 3 }}
               tickFormatter={(value) => value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value}
+              tickMargin={10}
             />
             <Tooltip 
               contentStyle={{ 
                 backgroundColor: 'var(--pixel-panel-bg)', 
-                border: '2px solid var(--pixel-border)',
+                border: '3px solid var(--pixel-border)',
                 borderRadius: '0px',
                 boxShadow: '4px 4px 0px var(--pixel-border)',
                 color: 'var(--color-foreground)',
@@ -103,12 +108,18 @@ export default function TrafficChart({ data, title }: TrafficChartProps) {
               }}
               itemStyle={{ color: 'var(--color-foreground)', fontWeight: 'bold' }}
             />
+            <Legend 
+              wrapperStyle={{ fontFamily: 'var(--font-pixel)', paddingTop: '10px' }}
+              iconType="square"
+            />
             <Line 
               type="linear" 
               dataKey="count" 
               stroke="var(--pixel-blue)" 
               strokeWidth={4}
-              name="Total"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
+              name="Total Views/Clones"
               filter="url(#neoShadow)"
               dot={<CustomizedDot />}
               activeDot={<CustomizedActiveDot />}
@@ -118,7 +129,9 @@ export default function TrafficChart({ data, title }: TrafficChartProps) {
               dataKey="uniques" 
               stroke="var(--pixel-purple)" 
               strokeWidth={4}
-              name="Unique"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
+              name="Unique Visitors/Cloners"
               filter="url(#neoShadow)"
               dot={<CustomizedDot />}
               activeDot={<CustomizedActiveDot />}
