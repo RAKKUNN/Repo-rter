@@ -4,11 +4,19 @@
 
 ---
 
-A beautiful, neo-brutalist / pixel-art GitHub traffic analytics tool built with Tauri and Next.js.
-
 <div align="center">
-  <img src="./public/logo.png" width="100" />
+  <img src="./public/logo.png" width="120" style="margin-bottom: 20px;" />
+
+  <h3>A beautiful, neo-brutalist / pixel-art GitHub traffic analytics tool built with Tauri and Next.js.</h3>
+
+  [![Product Hunt](https://img.shields.io/badge/Product_Hunt-Featured-orange?logo=product-hunt&style=for-the-badge)](https://www.producthunt.com/products/reporter-2)
+  [![GitHub release](https://img.shields.io/github/v/release/RAKKUNN/Repo-rter?style=for-the-badge&color=green)](https://github.com/RAKKUNN/Repo-rter/releases)
+  [![GitHub stars](https://img.shields.io/github/stars/RAKKUNN/Repo-rter?style=for-the-badge&color=yellow)](https://github.com/RAKKUNN/Repo-rter/stargazers)
+  [![GitHub license](https://img.shields.io/github/license/RAKKUNN/Repo-rter?style=for-the-badge&color=blue)](https://github.com/RAKKUNN/Repo-rter/blob/main/LICENSE)
+  [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=for-the-badge)](https://github.com/RAKKUNN/Repo-rter/releases)
 </div>
+
+<br />
 
 ## 📸 Screenshots
 
