@@ -130,6 +130,24 @@ Contributions are always welcome! If you find a bug, have an idea, or want to ad
 
 If Repo-rter saved your historical stats, please consider **starring the repository ⭐** or [sponsoring the project](https://github.com/sponsors/RAKKUNN)!
 
+## 📝 Changelog
+
+### v0.4.0
+- Migrated traffic cache from `localStorage` to native OS file storage (safe from system cache purges).
+- Added JSON backup data import feature to restore stats across devices.
+- Improved background sync with sliding-window repository rotation (safely syncs all repositories over time).
+- Refactored documentation and project structure for production-ready open-source packaging.
+
+### v0.3.0
+- Added release asset download statistics tracking.
+- Added Markdown report exporting (views, clones, referrers, paths, languages).
+
+### v0.2.0
+- Initial open-source release.
+- Core traffic tracking (views, clones, paths, referrers).
+- Multi-language support (12 languages).
+- Neo-Brutalist UI and system tray background syncing.
+
 ---
 
 ## 📄 License
