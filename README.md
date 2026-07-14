@@ -7,7 +7,7 @@
 <div align="center">
   <img src="./public/logo.png" width="120" style="margin-bottom: 20px;" />
 
-  <h3>A beautiful, neo-brutalist / pixel-art GitHub traffic analytics tool built with Tauri and Next.js.</h3>
+  <h3>A local-first, lightweight desktop dashboard to permanently save your GitHub repository traffic insights & release download stats.</h3>
 
   [![Product Hunt](https://img.shields.io/badge/Product_Hunt-Featured-orange?logo=product-hunt&style=for-the-badge)](https://www.producthunt.com/products/reporter-2)
   [![GitHub release](https://img.shields.io/github/v/release/RAKKUNN/Repo-rter?style=for-the-badge&color=green)](https://github.com/RAKKUNN/Repo-rter/releases)
@@ -23,61 +23,114 @@
 | Dashboard Overview | Global Traffic Timeline |
 | :---: | :---: |
 | <img src="./public/screenshots/overview.png" width="400"/> | <img src="./public/screenshots/global_traffic.png" width="400"/> |
-| **Repository Details** | **Analytics Breakdown** |
+| **Repository Details** | **Release Downloads & Metrics** |
 | <img src="./public/screenshots/repo_traffic.png" width="400"/> | <img src="./public/screenshots/details.png" width="400"/> |
 
-## 📖 About Repo-rter
-GitHub only provides 14 days of traffic analytics for your repositories. Repo-rter solves this by continuously running in the background of your desktop to infinitely track and store your repository views, clones, and stars locally. You never lose your data again!
+---
 
-## 🚀 Features
-- 📈 Track GitHub traffic infinitely (bypassing the 14-day limit)
-- 🎨 Neo-brutalist / Pixel-art UI
-- 🔄 Desktop app with system tray & background syncing via Cron
-- 💾 Export data to CSV and JSON
-- 🌐 Supports 12 languages
+## 💡 Why Repo-rter?
 
-## 🛠️ Technology Stack
-- **Frontend**: Next.js (Static Export), React, TailwindCSS
-- **Backend**: Tauri (Rust)
-- **State Management**: React Query with offline local storage caching
-- **Deployment**: GitHub Actions for cross-platform automated release building
+If you maintain open-source software on GitHub, you probably love checking your repository's traffic insights. However, two things are incredibly frustrating:
 
-## ⬇️ Installation (For Users)
-You don't need to build from source! Just download the latest installer for your OS:
-1. Go to the [Releases page](https://github.com/RAKKUNN/Repo-rter/releases/latest).
-2. Download the installer for your system:
-   - **macOS**: `Repo-rter_x.x.x_aarch64.dmg` or `x64.dmg`
-   - **Windows**: `Repo-rter_x.x.x_x64-setup.exe`
-   - **Linux**: `repo-rter_x.x.x_amd64.deb`
-3. Run the installer and launch the app.
+1. **The 14-Day Cliff**: GitHub only stores your traffic stats (views, clones, and referrers) for exactly 14 days. If you don't check or manually log them inside that window, that data is gone forever.
+2. **The Multi-Repo Chore**: To check multiple repositories, you have to click through "Insights" -> "Traffic" for every single repository in your browser. 
 
-## 💻 Local Development (For Developers)
+I didn't want to pay for a monthly SaaS subscription just to keep my own traffic history, and I didn't want to run complex scraper cron-jobs on a server. So, I built **Repo-rter**—a local-first, lightweight desktop application that solves this once and for all.
+
+---
+
+## ⚙️ How It Works
+
+Repo-rter runs quietly on your local machine and acts as a caching layer between you and the GitHub API:
+
+* **Local Merging**: When the app fetches data, it merges new views/clones with your local SQLite/local-storage database. It prevents duplicates using unique date keys, meaning you build an infinite historical timeline over time.
+* **Background Scheduler**: Tauri launches a local cron job that periodically syncs data in the background, so you don't even need to keep the app interface open.
+* **Privacy by Design**: Your GitHub Personal Access Token (PAT) is stored strictly on your local machine. No external servers or 3rd-party databases are involved.
+
+---
+
+## ✨ Features
+
+- **Infinite History Caching**: Keep your view, clone, and referrer data forever by caching it locally.
+- **Release Downloads Tracker**: Monitor the exact download count for each release asset (`.exe`, `.dmg`, `.deb`, etc.) across all versions.
+- **Unified Global Dashboard**: Monitor all your repositories' combined stars, forks, and traffic trends in one view.
+- **Export Reports**: Generate clean, ready-to-share Markdown reports of your repository metrics with a single click.
+- **Tauri-Powered Performance**: Extremely fast and lightweight (~15MB bundle size) with minimal RAM usage.
+- **Vibrant Neo-Brutalist UI**: An interface styled to be fun, responsive, and delightful to use.
+
+---
+
+## ⬇️ Installation & Setup
+
+### 1. Download the App
+Grab the latest installer for your OS from the [Releases page](https://github.com/RAKKUNN/Repo-rter/releases/latest):
+* **macOS**: `Repo-rter_x.x.x_aarch64.dmg` (Apple Silicon) or `x64.dmg` (Intel)
+* **Windows**: `Repo-rter_x.x.x_x64-setup.exe`
+* **Linux**: `repo-rter_x.x.x_amd64.deb`
+
+### 2. Configure your GitHub Token
+To fetch traffic data, the app requires a Personal Access Token (PAT):
+1. Go to your GitHub account -> **Settings** -> **Developer Settings** -> **Personal Access Tokens** -> **Fine-grained tokens**.
+2. Click **Generate new token**.
+3. Grant **Read-only** permissions for:
+   * **Metadata** (Repository details)
+   * **Administration** (Required by GitHub's API to access traffic data)
+4. Copy the generated token, paste it into Repo-rter, and you are ready to go!
+
+---
+
+## 🙋 FAQ
+
+#### Q. Why does the token require "Administration" permissions?
+Unfortunately, this is a limitation of the GitHub API. GitHub restricts access to the `/traffic` endpoint exclusively to repository owners or administrators. To fetch traffic data, the token must have read-level access to administration. Repo-rter is 100% open-source, so you can inspect the code to verify that your token is never misused.
+
+#### Q. Where is my traffic data stored?
+All data is cached locally in your system's application data folder, secured by your OS. Your token is only used to send direct HTTPS requests to `api.github.com`.
+
+#### Q. What happens if I hit the GitHub API Rate Limit?
+Repo-rter uses optimized background sync intervals to prevent rate limits. If you have many repositories and hit a limit, the app will gracefully pause and resume syncing once GitHub resets the limit.
+
+---
+
+## 🗺️ Roadmap
+
+- [x] Release asset download stats tracking
+- [x] Markdown report exporting
+- [ ] Discord/Telegram Webhook notification alerts (e.g. notify when star/download milestones are hit)
+- [ ] Offline interactive chart zooming & granular date filtering
+- [ ] Integration with GitHub Actions for headless syncing
+
+---
+
+## 💻 Local Development
 
 ### Prerequisites
-Before you begin, ensure you have the following installed:
-- [Node.js](https://nodejs.org/) (v18 or newer)
-- [Rust](https://www.rust-lang.org/tools/install) (latest stable)
-- OS-specific build dependencies (e.g., Xcode for macOS, C++ Build Tools for Windows, `libwebkit2gtk-4.0-dev` for Linux).
+- Node.js (v18 or newer)
+- Rust (latest stable)
+- System build dependencies (e.g., Xcode on macOS, C++ Build Tools on Windows).
 
-### Build & Run
-1. **Clone the repository:**
+### Run in Dev Mode
 ```bash
 git clone https://github.com/RAKKUNN/Repo-rter.git
 cd Repo-rter
-```
-2. **Install Node.js dependencies:**
-```bash
 npm install
-```
-3. **Run the development server:**
-This will start both the Next.js frontend and the Tauri Rust backend simultaneously.
-```bash
 npm run tauri dev
 ```
-4. **Build for production:**
+
+### Build Production Bundle
 ```bash
 npm run tauri build
 ```
 
-## ❤️ Support
-If you find this project useful, please consider [sponsoring me on GitHub](https://github.com/sponsors/RAKKUNN) or starring the repository!
+---
+
+## ❤️ Contributions & Support
+
+Contributions are always welcome! If you find a bug, have an idea, or want to add a translation, feel free to open an Issue or submit a Pull Request.
+
+If Repo-rter saved your historical stats, please consider **starring the repository ⭐** or [sponsoring the project](https://github.com/sponsors/RAKKUNN)!
+
+---
+
+## 📄 License
+This project is licensed under the [MIT License](LICENSE).
