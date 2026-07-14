@@ -4,11 +4,19 @@
 
 ---
 
-美しくネオブルータリズムなGitHubトラフィック分析ツール。
-
 <div align="center">
-  <img src="./public/logo.png" width="100" />
+  <img src="./public/logo.png" width="120" style="margin-bottom: 20px;" />
+
+  <h3>美しくネオブルータリズムなGitHubトラフィック分析ツール。</h3>
+
+  [![Product Hunt](https://img.shields.io/badge/Product_Hunt-Featured-orange?logo=product-hunt&style=for-the-badge)](https://www.producthunt.com/products/reporter-2)
+  [![GitHub release](https://img.shields.io/github/v/release/RAKKUNN/Repo-rter?style=for-the-badge&color=green)](https://github.com/RAKKUNN/Repo-rter/releases)
+  [![GitHub stars](https://img.shields.io/github/stars/RAKKUNN/Repo-rter?style=for-the-badge&color=yellow)](https://github.com/RAKKUNN/Repo-rter/stargazers)
+  [![GitHub license](https://img.shields.io/github/license/RAKKUNN/Repo-rter?style=for-the-badge&color=blue)](https://github.com/RAKKUNN/Repo-rter/blob/main/LICENSE)
+  [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=for-the-badge)](https://github.com/RAKKUNN/Repo-rter/releases)
 </div>
+
+<br />
 
 ## 📸 Screenshots
 
@@ -62,3 +70,21 @@ npm run tauri dev
 
 ## ❤️ スポンサー
 このプロジェクトが役に立った場合は、[スポンサー](https://github.com/sponsors/RAKKUNN)を検討してください！
+
+## 📝 Changelog
+
+### v0.4.0
+- Migrated traffic cache from `localStorage` to native OS file storage (safe from system cache purges).
+- Added JSON backup data import feature to restore stats across devices.
+- Improved background sync with sliding-window repository rotation (safely syncs all repositories over time).
+- Refactored documentation and project structure for production-ready open-source packaging.
+
+### v0.3.0
+- Added release asset download statistics tracking.
+- Added Markdown report exporting (views, clones, referrers, paths, languages).
+
+### v0.2.0
+- Initial open-source release.
+- Core traffic tracking (views, clones, paths, referrers).
+- Multi-language support (12 languages).
+- Neo-Brutalist UI and system tray background syncing.
