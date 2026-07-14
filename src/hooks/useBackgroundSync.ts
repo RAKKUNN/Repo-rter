@@ -2,14 +2,11 @@ import { useEffect } from 'react';
 import { isTauri } from '@tauri-apps/api/core';
 import { sendNotification, isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
 import { getRepos, getRepoTrafficViews, getRepoTrafficClones } from '@/lib/github';
-import { useTranslation } from 'react-i18next';
 
 // Run background sync every 1 hour (3600000 ms)
 const SYNC_INTERVAL = 3600000;
 
 export function useBackgroundSync() {
-  const { t } = useTranslation();
-
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
 
@@ -51,7 +48,7 @@ export function useBackgroundSync() {
             const owner = repo.owner.login;
             const name = repo.name;
             const viewsData = await getRepoTrafficViews(owner, name);
-            const clonesData = await getRepoTrafficClones(owner, name);
+            await getRepoTrafficClones(owner, name);
             
             if (viewsData && viewsData.count) totalNewViews += viewsData.count;
           }
