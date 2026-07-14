@@ -176,3 +176,37 @@ header {
   font-size: 1.2rem;
   color: var(--primary-color);
 }
+
+.lang-selector-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.lang-select {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--text-color);
+  background-color: #fff;
+  box-shadow: 3px 3px 0 var(--text-color);
+  cursor: pointer;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.lang-select:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--text-color);
+}
+
+.why-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.why-section p {
+  font-size: 1.1rem;
+  color: #333;
+}

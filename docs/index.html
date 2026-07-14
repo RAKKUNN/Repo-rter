@@ -3,28 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Repo-rter - GitHub Traffic Analytics App</title>
+  <title data-i18n="title">Repo-rter - GitHub Traffic Analytics App</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
+    <!-- Language Switcher -->
+    <div class="lang-selector-container">
+      <select id="lang-select" class="lang-select">
+        <option value="en">English</option>
+        <option value="ko">한국어</option>
+        <option value="zh">中文</option>
+        <option value="ja">日本語</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="ru">Русский</option>
+        <option value="pt">Português</option>
+        <option value="id">Bahasa Indonesia</option>
+        <option value="ar">العربية</option>
+        <option value="hi">हिन्दी</option>
+      </select>
+    </div>
+
     <header>
       <img src="logo.png" alt="Repo-rter Logo" class="logo-img" />
-      <h1>Repo-rter</h1>
-      <p class="hero-subtitle">Infinite GitHub Traffic Tracking. Right on your desktop.</p>
+      <h1 data-i18n="hero_title">Repo-rter</h1>
+      <p class="hero-subtitle" data-i18n="hero_subtitle">Stop losing your GitHub traffic stats after 14 days. Keep your insights safe, locally and for free.</p>
       
       <div class="header-links">
         <a href="https://github.com/RAKKUNN/Repo-rter" target="_blank" class="btn-link">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-          View on GitHub
+          <span data-i18n="btn_github">View on GitHub</span>
         </a>
         <a href="https://github.com/sponsors/RAKKUNN" target="_blank" class="btn-link sponsor-link">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-          Sponsor
+          <span data-i18n="btn_sponsor">Sponsor</span>
         </a>
       </div>
       
-      <div id="loading-status">Fetching latest release...</div>
+      <div id="loading-status" data-i18n="fetching_release">Fetching latest release...</div>
       
       <div class="downloads">
         <a id="btn-mac" href="#" class="btn btn-mac" style="display: none;">
@@ -51,27 +69,36 @@
       </div>
     </section>
 
+    <!-- Why Repo-rter Motivation Section -->
     <section class="section">
-      <h2>✨ Features</h2>
+      <h2 data-i18n="why_title">Why Repo-rter?</h2>
+      <div class="why-section">
+        <p data-i18n="why_p1">GitHub only stores your traffic stats (views, clones, and referrers) for exactly 14 days. If you don't check or manually log them inside that window, that data is gone forever.</p>
+        <p data-i18n="why_p2">Repo-rter runs quietly on your desktop, automatically merging new data with your local history database to build an infinite timeline.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 data-i18n="features_title">Features</h2>
       <div class="features-grid">
         <div class="feature-card">
-          <h3>🚀 Infinite Tracking</h3>
-          <p>Bypass GitHub's 14-day limit. Repo-rter runs in the background and saves your traffic data infinitely.</p>
+          <h3 data-i18n="feat_infinite_title">Infinite Caching</h3>
+          <p data-i18n="feat_infinite_desc">Bypass GitHub's 14-day limit by permanently caching traffic data locally.</p>
         </div>
         <div class="feature-card">
-          <h3>🎨 Neo-Brutalist UI</h3>
-          <p>A beautiful pixel-art inspired aesthetic that makes tracking your repos a joy.</p>
+          <h3 data-i18n="feat_brutalist_title">Neo-Brutalist UI</h3>
+          <p data-i18n="feat_brutalist_desc">A beautiful pixel-art inspired aesthetic that makes tracking your repos a joy.</p>
         </div>
         <div class="feature-card">
-          <h3>💾 Export Anywhere</h3>
-          <p>Export your historical views and clones to CSV and JSON for external analysis.</p>
+          <h3 data-i18n="feat_export_title">Markdown Export</h3>
+          <p data-i18n="feat_export_desc">Export beautiful traffic reports with a single click.</p>
         </div>
       </div>
     </section>
 
     <section class="section">
-      <h2>🌍 12 Languages Supported</h2>
-      <p>Use the app in your native language. Currently supported:</p>
+      <h2 data-i18n="languages_title">12 Languages Supported</h2>
+      <p data-i18n="languages_subtitle">Use the app in your native language. Currently supported:</p>
       <div class="languages-grid">
         <span class="lang-badge">🇺🇸 English</span>
         <span class="lang-badge">🇰🇷 한국어</span>
@@ -90,6 +117,282 @@
   </div>
 
   <script>
+    const TRANSLATIONS = {
+      en: {
+        title: "Repo-rter - GitHub Traffic Analytics App",
+        hero_title: "Repo-rter",
+        hero_subtitle: "Stop losing your GitHub traffic stats after 14 days. Keep your insights safe, locally and for free.",
+        btn_github: "View on GitHub",
+        btn_sponsor: "Sponsor",
+        fetching_release: "Fetching latest release...",
+        why_title: "Why Repo-rter?",
+        why_p1: "GitHub only stores your traffic stats (views, clones, and referrers) for exactly 14 days. If you don't check or manually log them inside that window, that data is gone forever.",
+        why_p2: "Repo-rter runs quietly on your desktop, automatically merging new data with your local history database to build an infinite timeline.",
+        features_title: "Features",
+        feat_infinite_title: "Infinite Caching",
+        feat_infinite_desc: "Bypass GitHub's 14-day limit by permanently caching traffic data locally.",
+        feat_brutalist_title: "Neo-Brutalist UI",
+        feat_brutalist_desc: "A beautiful pixel-art inspired aesthetic that makes tracking your repos a joy.",
+        feat_export_title: "Markdown Export",
+        feat_export_desc: "Export beautiful traffic reports with a single click.",
+        languages_title: "12 Languages Supported",
+        languages_subtitle: "Use the app in your native language. Currently supported:"
+      },
+      ko: {
+        title: "Repo-rter - 깃허브 트래픽 분석 대시보드",
+        hero_title: "Repo-rter",
+        hero_subtitle: "14일이 지나면 사라지는 깃허브 트래픽 데이터, 로컬에서 무료로 영구 보존하세요.",
+        btn_github: "GitHub 저장소 보기",
+        btn_sponsor: "후원하기",
+        fetching_release: "최신 릴리스 정보를 불러오는 중...",
+        why_title: "왜 Repo-rter인가요?",
+        why_p1: "깃허브는 트래픽 데이터를 딱 14일만 보관하고 지워버립니다. 매번 웹사이트에 들어가기 귀찮았거나, 통계를 영구히 백업해두고 싶었던 분들을 위해 만들었습니다.",
+        why_p2: "Repo-rter는 백그라운드에서 주기적으로 트래픽 데이터를 가져와 로컬 파일에 안전하게 날짜별로 머지해 줍니다.",
+        features_title: "주요 기능",
+        feat_infinite_title: "무제한 캐싱",
+        feat_infinite_desc: "14일 제한을 우회하여 평생의 뷰 및 클론 트래픽 데이터를 보존합니다.",
+        feat_brutalist_title: "네오 브루탈리즘 UI",
+        feat_brutalist_desc: "조작하는 재미를 더해주는 개성 있고 생동감 넘치는 반응형 디자인.",
+        feat_export_title: "마크다운 보고서 추출",
+        feat_export_desc: "단 한 번의 클릭으로 깔끔하게 정리된 보고서를 내보냅니다.",
+        languages_title: "12개 다국어 지원",
+        languages_subtitle: "사용자의 모국어로 앱을 사용하세요. 현재 지원하는 언어:"
+      },
+      zh: {
+        title: "Repo-rter - GitHub 流量分析工具",
+        hero_title: "Repo-rter",
+        hero_subtitle: "永久保存 14 天后失效的 GitHub 流量数据。本地存储，完全免费。",
+        btn_github: "查看 GitHub 仓库",
+        btn_sponsor: "赞助项目",
+        fetching_release: "正在获取最新版本...",
+        why_title: "为什么选择 Repo-rter？",
+        why_p1: "GitHub 仅提供 14 天的流量数据。如果你不在该窗口内检查或手动记录，这些数据将永久丢失。",
+        why_p2: "Repo-rter 在后台持续运行，自动将新数据与本地历史数据库合并，构建无限的时间线。",
+        features_title: "主要功能",
+        feat_infinite_title: "无限期缓存",
+        feat_infinite_desc: "通过在本地永久缓存流量数据，绕过 GitHub 的 14 天限制。",
+        feat_brutalist_title: "新粗野主义 UI",
+        feat_brutalist_desc: "像素艺术与新粗野主义风格结合，让流量追踪变得有趣。",
+        feat_export_title: "导出 Markdown",
+        feat_export_desc: "只需一键，即可生成漂亮的流量报告。",
+        languages_title: "支持 12 种语言",
+        languages_subtitle: "使用您的母语使用该应用程序。目前支持："
+      },
+      ja: {
+        title: "Repo-rter - GitHubトラフィック分析ツール",
+        hero_title: "Repo-rter",
+        hero_subtitle: "14日後に消えるGitHubトラフィック統計を永久に保存。ローカル＆無料。",
+        btn_github: "GitHubで見る",
+        btn_sponsor: "スポンサーする",
+        fetching_release: "最新リリースを取得中...",
+        why_title: "なぜ Repo-rter なのか？",
+        why_p1: "GitHubはトラフィック統計（ビュー、クローン）を14日間しか保存しません。その期間内にチェックまたは手動で記録しないと、データは永久に失われます。",
+        why_p2: "Repo-rterはバックグラウンドで動作し、新しいデータをローカル履歴データベースと自動的にマージして、無限のタイムラインを構築します。",
+        features_title: "主な機能",
+        feat_infinite_title: "無制限キャッシュ",
+        feat_infinite_desc: "トラフィックデータをローカルに永久保存して、GitHubの14日間制限をバイパスします。",
+        feat_brutalist_title: "ネオブルータリズム UI",
+        feat_brutalist_desc: "ピクセルアート風のデザインで、トラフィックの追跡が楽しくなります。",
+        feat_export_title: "Markdown エクスポート",
+        feat_export_desc: "ワンクリックで美しいトラフィックレポートを書き出します。",
+        languages_title: "12言語対応",
+        languages_subtitle: "あなたの母国語でアプリを使用できます。現在サポートされている言語："
+      },
+      es: {
+        title: "Repo-rter - Estadísticas de Tráfico de GitHub",
+        hero_title: "Repo-rter",
+        hero_subtitle: "Guarda las estadísticas de tráfico de GitHub permanentemente. Local y gratis.",
+        btn_github: "Ver en GitHub",
+        btn_sponsor: "Patrocinar",
+        fetching_release: "Obteniendo la última versión...",
+        why_title: "¿Por qué Repo-rter?",
+        why_p1: "GitHub solo almacena tus estadísticas de tráfico (vistas, clones) durante exactamente 14 días. Si no las revisas, esos datos se pierden para siempre.",
+        why_p2: "Repo-rter se ejecuta silenciosamente en tu ordenador, fusionando automáticamente los nuevos datos con tu base de datos local.",
+        features_title: "Características",
+        feat_infinite_title: "Caché Infinita",
+        feat_infinite_desc: "Evita el límite de 14 días de GitHub guardando los datos de forma permanente.",
+        feat_brutalist_title: "UI Neo-Brutalista",
+        feat_brutalist_desc: "Un diseño inspirado en el pixel-art que hace del seguimiento un placer.",
+        feat_export_title: "Exportación a Markdown",
+        feat_export_desc: "Exporta hermosos informes de tráfico con un solo clic.",
+        languages_title: "12 Idiomas Soportados",
+        languages_subtitle: "Usa la aplicación en tu idioma nativo. Actualmente soportados:"
+      },
+      fr: {
+        title: "Repo-rter - Analyse du Trafic GitHub",
+        hero_title: "Repo-rter",
+        hero_subtitle: "Conservez vos statistiques de trafic GitHub pour toujours. Local et gratuit.",
+        btn_github: "Voir sur GitHub",
+        btn_sponsor: "Soutenir",
+        fetching_release: "Récupération de la dernière version...",
+        why_title: "Pourquoi Repo-rter ?",
+        why_p1: "GitHub ne conserve vos statistiques de trafic (vues, clones) que pendant 14 jours. Si vous ne les vérifiez pas, ces données sont perdues à jamais.",
+        why_p2: "Repo-rter fonctionne en arrière-plan, fusionnant automatiquement les nouvelles données avec votre historique local.",
+        features_title: "Fonctionnalités",
+        feat_infinite_title: "Historique Infini",
+        feat_infinite_desc: "Contournez la limite des 14 jours en stockant vos données localement.",
+        feat_brutalist_title: "Design Néo-Brutaliste",
+        feat_brutalist_desc: "Une esthétique rétro pixel-art qui rend le suivi agréable.",
+        feat_export_title: "Exportation Markdown",
+        feat_export_desc: "Générez un rapport détaillé en un clic.",
+        languages_title: "12 Langues Supportées",
+        languages_subtitle: "Utilisez l'application dans votre langue maternelle. Actuellement supportées :"
+      },
+      de: {
+        title: "Repo-rter - GitHub Traffic-Statistiken",
+        hero_title: "Repo-rter",
+        hero_subtitle: "Speichern Sie Ihre GitHub-Traffic-Statistiken dauerhaft. Lokal & kostenlos.",
+        btn_github: "Auf GitHub ansehen",
+        btn_sponsor: "Sponsoren",
+        fetching_release: "Lade neueste Version herunter...",
+        why_title: "Warum Repo-rter?",
+        why_p1: "GitHub speichert Ihre Traffic-Statistiken (Views, Clones) nur für genau 14 Tage. Wenn Sie sie nicht rechtzeitig sichern, sind sie für immer verloren.",
+        why_p2: "Repo-rter läuft unauffällig im Hintergrund und führt neue Daten automatisch mit Ihrer lokalen Historie zusammen.",
+        features_title: "Funktionen",
+        feat_infinite_title: "Unbegrenzter Cache",
+        feat_infinite_desc: "Umgehen Sie die 14-Tage-Grenze durch dauerhafte lokale Speicherung.",
+        feat_brutalist_title: "Neo-brutalistisches Design",
+        feat_brutalist_desc: "Eine verspielte Pixel-Art-Ästhetik, die das Tracking erleichtert.",
+        feat_export_title: "Markdown-Export",
+        feat_export_desc: "Exportieren Sie detaillierte Berichte mit einem Klick.",
+        languages_title: "12 Sprachen Unterstützt",
+        languages_subtitle: "Verwenden Sie die App in Ihrer Muttersprache. Derzeit unterstützt:"
+      },
+      ru: {
+        title: "Repo-rter - Статистика трафика GitHub",
+        hero_title: "Repo-rter",
+        hero_subtitle: "Сохраняйте статистику трафика GitHub навсегда. Локально и бесплатно.",
+        btn_github: "Открыть на GitHub",
+        btn_sponsor: "Спонсировать",
+        fetching_release: "Получение последней версии...",
+        why_title: "Почему Repo-rter?",
+        why_p1: "GitHub хранит статистику трафика (просмотры, клоны) ровно 14 дней. Если вы не проверите ее, эти данные будут потеряны навсегда.",
+        why_p2: "Repo-rter незаметно работает в фоновом режиме, автоматически объединяя новые данные с вашей локальной историей.",
+        features_title: "Особенности",
+        feat_infinite_title: "Вечный кэш",
+        feat_infinite_desc: "Обходите лимит 14 дней, сохраняя статистику на своем компьютере.",
+        feat_brutalist_title: "Нео-брутализм",
+        feat_brutalist_desc: "Пиксельный стиль интерфейса, превращающий рутину в удовольствие.",
+        feat_export_title: "Экспорт в Markdown",
+        feat_export_desc: "Экспортируйте отчеты о трафике в один клик.",
+        languages_title: "Поддержка 12 языков",
+        languages_subtitle: "Используйте приложение на своем родном языке. Сейчас поддерживаются:"
+      },
+      pt: {
+        title: "Repo-rter - Análise de Tráfego do GitHub",
+        hero_title: "Repo-rter",
+        hero_subtitle: "Guarde as suas estatísticas de tráfego do GitHub para sempre. Local e gratuito.",
+        btn_github: "Ver no GitHub",
+        btn_sponsor: "Patrocinar",
+        fetching_release: "A procurar a versão mais recente...",
+        why_title: "Por que Repo-rter?",
+        why_p1: "O GitHub apenas guarda as estatísticas de tráfego (visualizações, clones) por exatamente 14 dias. Se não as verificar, esses dados serão perdidos.",
+        why_p2: "O Repo-rter corre em segundo plano, fundindo automaticamente os novos dados com o seu histórico local.",
+        features_title: "Funcionalidades",
+        feat_infinite_title: "Caché Infinita",
+        feat_infinite_desc: "Contorne o limite de 14 dias do GitHub guardando tudo no seu PC.",
+        feat_brutalist_title: "Interface Brutalista",
+        feat_brutalist_desc: "Uma estética pixel-art que torna o acompanhamento visualmente agradável.",
+        feat_export_title: "Exportar Markdown",
+        feat_export_desc: "Crie relatórios de tráfego detalhados com um clique.",
+        languages_title: "12 Idiomas Suportados",
+        languages_subtitle: "Use a aplicação no seu idioma nativo. Atualmente suportados:"
+      },
+      id: {
+        title: "Repo-rter - Analisis Lalu Lintas GitHub",
+        hero_title: "Repo-rter",
+        hero_subtitle: "Simpan statistik lalu lintas GitHub Anda selamanya. Lokal & gratis.",
+        btn_github: "Lihat di GitHub",
+        btn_sponsor: "Sponsor",
+        fetching_release: "Mengambil versi terbaru...",
+        why_title: "Mengapa Repo-rter?",
+        why_p1: "GitHub hanya menyimpan statistik lalu lintas (tampilan, klon) Anda selama tepat 14 hari. Jika Anda tidak memeriksanya, data tersebut akan hilang selamanya.",
+        why_p2: "Repo-rter berjalan di latar belakang, menggabungkan data baru dengan riwayat lokal Anda secara otomatis.",
+        features_title: "Fitur",
+        feat_infinite_title: "Riwayat Tanpa Batas",
+        feat_infinite_desc: "Lewati batas 14 hari GitHub dengan menyimpan data secara lokal.",
+        feat_brutalist_title: "UI Neo-Brutalis",
+        feat_brutalist_desc: "Desain pixel-art yang menyenangkan untuk digunakan sehari-hari.",
+        feat_export_title: "Ekspor Markdown",
+        feat_export_desc: "Ekspor laporan lalu lintas yang rapi hanya dalam satu klik.",
+        languages_title: "Mendukung 12 Bahasa",
+        languages_subtitle: "Gunakan aplikasi dalam bahasa asal Anda. Saat ini didukung:"
+      },
+      ar: {
+        title: "Repo-rter - تحليلات حركة مرور GitHub",
+        hero_title: "Repo-rter",
+        hero_subtitle: "احفظ إحصاءات حركة مرور GitHub بشكل دائم. محلي ومجاني.",
+        btn_github: "عرض على GitHub",
+        btn_sponsor: "دعم",
+        fetching_release: "جلب أحدث إصدار...",
+        why_title: "لماذا Repo-rter؟",
+        why_p1: "يحتفظ GitHub بإحصاءات حركة المرور الخاصة بك (المشاهدات، الاستنساخ) لمدة 14 يومًا فقط. إذا لم تقم بالتحقق منها، فستضيع هذه البيانات للأبد.",
+        why_p2: "يعمل Repo-rter في الخلفية ويقوم بدمج البيانات الجديدة تلقائيًا مع قاعدة البيانات المحلية الخاصة بك.",
+        features_title: "الميزات",
+        feat_infinite_title: "تخزين دائم",
+        feat_infinite_desc: "تجاوز حد الـ 14 يومًا الخاص بـ GitHub بتخزين البيانات محليًا للأبد.",
+        feat_brutalist_title: "واجهة نيو-بروتاليزم",
+        feat_brutalist_desc: "تصميم فني بكسلي مميز يجعل تتبع بياناتك ممتعًا.",
+        feat_export_title: "تصدير بصيغة Markdown",
+        feat_export_desc: "قم بتصدير تقارير حركة المرور الجميلة بضغطة زر واحدة.",
+        languages_title: "يدعم 12 لغة",
+        languages_subtitle: "استخدم التطبيق بلغتك الأم. اللغات المدعومة حاليًا:"
+      },
+      hi: {
+        title: "Repo-rter - GitHub ट्रैफ़िक विश्लेषक",
+        hero_title: "Repo-rter",
+        hero_subtitle: "अपने GitHub ट्रैफ़िक आँकड़ों को स्थायी रूप से सहेजें। स्थानीय और मुफ़्त।",
+        btn_github: "GitHub पर देखें",
+        btn_sponsor: "प्रायोजित करें",
+        fetching_release: "नवीनतम संस्करण प्राप्त किया जा रहा है...",
+        why_title: "Repo-rter क्यों?",
+        why_p1: "GitHub आपके ट्रैफ़िक आँकड़ों (दृश्य, क्लोन) को केवल 14 दिनों के लिए संग्रहीत करता है। यदि आप उन्हें सहेजते नहीं हैं, तो वे हमेशा के लिए चले जाते हैं।",
+        why_p2: "Repo-rter पृष्ठभूमि में चलता है, नए डेटा को आपके स्थानीय इतिहास डेटाबेस के साथ स्वचालित रूप से मर्ज करता है।",
+        features_title: "विशेषताएँ",
+        feat_infinite_title: "असीमित कैशिंग",
+        feat_infinite_desc: "स्थानीय रूप से डेटा सहेजकर GitHub की 14-दिन की सीमा को बायपास करें।",
+        feat_brutalist_title: "नियो-ब्रूटलिस्ट UI",
+        feat_brutalist_desc: "एक सुंदर पिक्सेल-कला प्रेरित डिज़ाइन जो ट्रैफ़िक देखने को मज़ेदार बनाता है।",
+        feat_export_title: "Markdown निर्यात",
+        feat_export_desc: "एक क्लिक में सुंदर ट्रैफ़िक रिपोर्ट निर्यात करें।",
+        languages_title: "12 भाषाओं का समर्थन",
+        languages_subtitle: "अपनी मातृभाषा में ऐप का उपयोग करें। वर्तमान में समर्थित:"
+      }
+    };
+
+    function setLanguage(lang) {
+      const trans = TRANSLATIONS[lang] || TRANSLATIONS.en;
+      
+      // Update DOM elements with data-i18n attributes
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (trans[key]) {
+          if (el.tagName === 'TITLE') {
+            document.title = trans[key];
+          } else {
+            el.textContent = trans[key];
+          }
+        }
+      });
+
+      // Save preference & update document lang attribute
+      localStorage.setItem('landing_lang', lang);
+      document.documentElement.lang = lang;
+      document.getElementById('lang-select').value = lang;
+    }
+
+    // Initialize Language Selector
+    const langSelect = document.getElementById('lang-select');
+    langSelect.addEventListener('change', (e) => {
+      setLanguage(e.target.value);
+    });
+
+    // Detect browser default or saved preference
+    const savedLang = localStorage.getItem('landing_lang');
+    const browserLang = navigator.language.split('-')[0];
+    const initialLang = savedLang || (TRANSLATIONS[browserLang] ? browserLang : 'en');
+    setLanguage(initialLang);
+
     async function fetchLatestRelease() {
       const statusText = document.getElementById('loading-status');
       try {
@@ -98,10 +401,8 @@
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        
         const assets = data.assets;
         
-        // Find the download URLs
         let macUrl = null;
         let winUrl = null;
         let linUrl = null;
