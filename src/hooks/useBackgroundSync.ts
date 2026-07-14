@@ -31,12 +31,23 @@ export function useBackgroundSync() {
           const repos = await getRepos();
           if (!repos || repos.length === 0) return;
 
-          // 2. Fetch traffic data to trigger localStorage persistence
-          // We limit to top 10 repos to avoid hitting API rate limits too quickly in the background
-          const topRepos = repos.sort((a: any, b: any) => b.stargazers_count - a.stargazers_count).slice(0, 10);
+          // 2. Fetch traffic data to trigger persistence
+          // We sync in batches of 10 repositories, rotating through the entire list to prevent rate limits
+          const lastSyncedIndexStr = localStorage.getItem('background_sync_last_index');
+          let startIndex = lastSyncedIndexStr ? parseInt(lastSyncedIndexStr, 10) : 0;
+          if (isNaN(startIndex) || startIndex >= repos.length) {
+            startIndex = 0;
+          }
+
+          // Sort repositories consistently so the rotation index maps predictably
+          const sortedRepos = repos.sort((a: any, b: any) => b.stargazers_count - a.stargazers_count);
+          
+          const BATCH_SIZE = 10;
+          const endIndex = Math.min(startIndex + BATCH_SIZE, sortedRepos.length);
+          const batchRepos = sortedRepos.slice(startIndex, endIndex);
           
           let totalNewViews = 0;
-          for (const repo of topRepos) {
+          for (const repo of batchRepos) {
             const owner = repo.owner.login;
             const name = repo.name;
             const viewsData = await getRepoTrafficViews(owner, name);
@@ -45,11 +56,15 @@ export function useBackgroundSync() {
             if (viewsData && viewsData.count) totalNewViews += viewsData.count;
           }
 
+          // Update sync index for next iteration
+          const nextStartIndex = endIndex >= sortedRepos.length ? 0 : endIndex;
+          localStorage.setItem('background_sync_last_index', nextStartIndex.toString());
+
           // 3. Send Notification
           if (permissionGranted) {
             sendNotification({
               title: 'Repo-rter Sync',
-              body: `Background sync completed. Processed ${topRepos.length} top repos. Total views snapshot: ${totalNewViews}.`
+              body: `Synced batch ${startIndex + 1}-${endIndex} of ${sortedRepos.length} repos. Total views snapshot: ${totalNewViews}.`
             });
           }
 

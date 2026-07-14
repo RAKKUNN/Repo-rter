@@ -1,11 +1,13 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Globe, Moon, Sun, User, LogOut, Info, Settings as SettingsIcon, Download, Database } from 'lucide-react';
+import { X, Globe, Moon, Sun, User, LogOut, Info, Settings as SettingsIcon, Download, Database, Upload } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'next-themes';
 import { useToast } from './ToastProvider';
+import { useQueryClient } from '@tanstack/react-query';
+import { mergeTrafficData } from '@/lib/storage';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -31,8 +33,51 @@ export default function SettingsModal({
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<TabType>('general');
   const [mounted, setMounted] = useState(false);
+
+  const handleImportJson = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const text = event.target?.result as string;
+        const data = JSON.parse(text);
+
+        if (!Array.isArray(data)) {
+          toast('Invalid backup format. Expected a JSON array.', 'error');
+          return;
+        }
+
+        let importCount = 0;
+        for (const item of data) {
+          if (item.repo && item.data) {
+            if (item.data.views && Array.isArray(item.data.views)) {
+              await mergeTrafficData(item.repo, 'views', item.data.views);
+              importCount++;
+            }
+            if (item.data.clones && Array.isArray(item.data.clones)) {
+              await mergeTrafficData(item.repo, 'clones', item.data.clones);
+            }
+          }
+        }
+
+        if (importCount > 0) {
+          toast(`Successfully imported ${importCount} repositories.`, 'success');
+          queryClient.invalidateQueries();
+        } else {
+          toast('No valid repository data found in the file.', 'error');
+        }
+      } catch (err) {
+        console.error('Import failed:', err);
+        toast('Failed to parse JSON file.', 'error');
+      }
+    };
+    reader.readAsText(file);
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -263,6 +308,31 @@ export default function SettingsModal({
                           <Database className="w-5 h-5" />
                           {t('exportJson')}
                         </button>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section>
+                    <h3 className="text-xl font-bold mb-4 border-b-2 border-foreground/20 pb-2">{t('importData') || 'Import Data'}</h3>
+                    <div className="p-6 border-2 border-[var(--pixel-border)] bg-foreground/5 space-y-6">
+                      <div>
+                        <div className="font-bold text-lg mb-2">{t('uploadBackupFile') || 'Upload Backup File'}</div>
+                        <div className="text-sm opacity-70">
+                          {t('importDesc') || 'Restore your repository traffic cache from a previously exported JSON backup file.'}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="inline-flex items-center gap-2 px-6 py-3 bg-pixel-purple text-white border-2 border-[var(--pixel-border)] shadow-[4px_4px_0px_var(--pixel-border)] hover:bg-pixel-purple/90 active:translate-y-[2px] active:shadow-none transition-all font-bold cursor-pointer">
+                          <Upload className="w-5 h-5" />
+                          {t('selectJsonFile') || 'Select JSON File'}
+                          <input 
+                            type="file" 
+                            accept=".json" 
+                            onChange={handleImportJson} 
+                            className="hidden" 
+                          />
+                        </label>
                       </div>
                     </div>
                   </section>

@@ -89,7 +89,7 @@ export async function getRepoTrafficViews(owner: string, repo: string) {
   if (!res.ok) return null;
   const data = await res.json();
   if (data && data.views) {
-    data.views = mergeTrafficData(`${owner}/${repo}`, 'views', data.views);
+    data.views = await mergeTrafficData(`${owner}/${repo}`, 'views', data.views);
   }
   return data;
 }
@@ -104,7 +104,7 @@ export async function getRepoTrafficClones(owner: string, repo: string) {
   if (!res.ok) return null;
   const data = await res.json();
   if (data && data.clones) {
-    data.clones = mergeTrafficData(`${owner}/${repo}`, 'clones', data.clones);
+    data.clones = await mergeTrafficData(`${owner}/${repo}`, 'clones', data.clones);
   }
   return data;
 }
