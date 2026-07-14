@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import '@/lib/i18n';
 import { ThemeProvider } from 'next-themes';
 import { ToastProvider } from './ToastProvider';
+import { cleanExpiredCache } from '@/lib/storage';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -33,6 +34,19 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       window.addEventListener('contextmenu', handleContextMenu);
       return () => window.removeEventListener('contextmenu', handleContextMenu);
     }
+  }, []);
+
+  useEffect(() => {
+    const runCleanup = async () => {
+      const retentionDaysStr = localStorage.getItem('data_retention_days');
+      if (retentionDaysStr) {
+        const retentionDays = parseInt(retentionDaysStr, 10);
+        if (!isNaN(retentionDays) && retentionDays > 0) {
+          await cleanExpiredCache(retentionDays);
+        }
+      }
+    };
+    runCleanup();
   }, []);
 
   return (

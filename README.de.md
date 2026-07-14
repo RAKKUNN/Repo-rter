@@ -62,6 +62,10 @@ Bitte [sponsern Sie mich](https://github.com/sponsors/RAKKUNN)!
 
 ## 📝 Changelog
 
+### v0.4.1
+- Added custom Data Retention Policy settings (auto-purging old traffic history).
+- Dynamically synchronized version strings inside the Settings About panel with package configuration.
+
 ### v0.4.0
 - Migrated traffic cache from `localStorage` to native OS file storage (safe from system cache purges).
 - Added JSON backup data import feature to restore stats across devices.

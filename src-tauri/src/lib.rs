@@ -33,10 +33,49 @@ fn load_traffic_data(app_handle: tauri::AppHandle, repo_key: String, data_type: 
     fs::read_to_string(path).map_err(|e| e.to_string())
 }
 
+#[tauri::command]
+fn clean_expired_traffic_data(app_handle: tauri::AppHandle, threshold_str: String) -> Result<(), String> {
+    let path = app_handle.path().app_data_dir().map_err(|e| e.to_string())?;
+    if !path.exists() {
+        return Ok(());
+    }
+    
+    let entries = fs::read_dir(&path).map_err(|e| e.to_string())?;
+    for entry in entries {
+        let entry = entry.map_err(|e| e.to_string())?;
+        let file_path = entry.path();
+        if file_path.is_file() {
+            let filename = file_path.file_name().unwrap().to_string_lossy();
+            if filename.starts_with("traffic_views_") || filename.starts_with("traffic_clones_") {
+                let content = fs::read_to_string(&file_path).map_err(|e| e.to_string())?;
+                if let Ok(mut json_arr) = serde_json::from_str::<serde_json::Value>(&content) {
+                    if let Some(arr) = json_arr.as_array_mut() {
+                        let original_len = arr.len();
+                        
+                        arr.retain(|item| {
+                            if let Some(timestamp) = item.get("timestamp").and_then(|t| t.as_str()) {
+                                timestamp >= threshold_str.as_str()
+                            } else {
+                                true
+                            }
+                        });
+                        
+                        if arr.len() != original_len {
+                            let updated_content = serde_json::to_string(arr).map_err(|e| e.to_string())?;
+                            fs::write(&file_path, updated_content).map_err(|e| e.to_string())?;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![save_traffic_data, load_traffic_data])
+        .invoke_handler(tauri::generate_handler![save_traffic_data, load_traffic_data, clean_expired_traffic_data])
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_http::init())

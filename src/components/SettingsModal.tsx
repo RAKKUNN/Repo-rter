@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from 'next-themes';
 import { useToast } from './ToastProvider';
 import { useQueryClient } from '@tanstack/react-query';
-import { mergeTrafficData } from '@/lib/storage';
+import { mergeTrafficData, cleanExpiredCache } from '@/lib/storage';
+import packageInfo from '../../package.json';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -36,6 +37,27 @@ export default function SettingsModal({
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<TabType>('general');
   const [mounted, setMounted] = useState(false);
+  const [retentionDays, setRetentionDays] = useState<number>(-1);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('data_retention_days');
+    if (saved) {
+      setRetentionDays(Number(saved));
+    }
+  }, []);
+
+  const handleRetentionChange = async (days: number) => {
+    setRetentionDays(days);
+    localStorage.setItem('data_retention_days', days.toString());
+    try {
+      await cleanExpiredCache(days);
+      toast('Applied data retention policy and purged old entries.', 'success');
+      queryClient.invalidateQueries();
+    } catch (e) {
+      console.error('Failed to apply retention policy:', e);
+      toast('Failed to purge old data.', 'error');
+    }
+  };
 
   const handleImportJson = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -336,6 +358,32 @@ export default function SettingsModal({
                       </div>
                     </div>
                   </section>
+
+                  <section>
+                    <h3 className="text-xl font-bold mb-4 border-b-2 border-foreground/20 pb-2">{t('dataRetention') || 'Data Retention'}</h3>
+                    <div className="p-6 border-2 border-[var(--pixel-border)] bg-foreground/5 space-y-6">
+                      <div>
+                        <div className="font-bold text-lg mb-2">{t('retentionPeriod') || 'Retention Period'}</div>
+                        <div className="text-sm opacity-70">
+                          {t('retentionDesc') || 'Automatically purge local traffic data points older than the selected period to save storage space.'}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <select 
+                          value={retentionDays}
+                          onChange={(e) => handleRetentionChange(Number(e.target.value))}
+                          className="px-4 py-2 border-2 border-[var(--pixel-border)] font-bold bg-[var(--pixel-panel-bg)] hover:bg-foreground/5 cursor-pointer outline-none focus:ring-2 focus:ring-pixel-blue"
+                        >
+                          <option value="-1">{t('keepForever') || 'Keep Forever'}</option>
+                          <option value="30">{t('30days') || '30 Days'}</option>
+                          <option value="90">{t('90days') || '90 Days'}</option>
+                          <option value="180">{t('180days') || '180 Days'}</option>
+                          <option value="365">{t('1year') || '1 Year'}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </section>
                 </div>
               )}
 
@@ -378,7 +426,7 @@ export default function SettingsModal({
                 <div className="space-y-8 animate-in fade-in duration-300 text-center py-10 flex flex-col items-center">
                   <img src="/logo.png" alt="Repo-rter Logo" className="w-24 h-24 mb-6 rendering-pixelated" style={{ imageRendering: 'pixelated' }} />
                   <h2 className="text-3xl font-bold text-gradient mb-2">Repo-rter</h2>
-                  <p className="text-foreground/70 mb-8">Version 1.0.0-pixel</p>
+                  <p className="text-foreground/70 mb-8">Version {packageInfo.version}</p>
                   
                   <div className="max-w-md mx-auto text-sm text-left border-2 border-[var(--pixel-border)] p-6 bg-foreground/5">
                     <p className="mb-4"><strong>Repo-rter</strong> is an advanced desktop traffic viewer built with React, Tauri, and Neo-Brutalist pixel art.</p>

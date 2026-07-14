@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { isTauri } from '@tauri-apps/api/core';
 import { sendNotification, isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
 import { getRepos, getRepoTrafficViews, getRepoTrafficClones } from '@/lib/github';
+import { cleanExpiredCache } from '@/lib/storage';
 
 // Run background sync every 1 hour (3600000 ms)
 const SYNC_INTERVAL = 3600000;
@@ -21,6 +22,15 @@ export function useBackgroundSync() {
 
       intervalId = setInterval(async () => {
         try {
+          // Apply data retention policy
+          const retentionDaysStr = localStorage.getItem('data_retention_days');
+          if (retentionDaysStr) {
+            const retentionDays = parseInt(retentionDaysStr, 10);
+            if (!isNaN(retentionDays) && retentionDays > 0) {
+              await cleanExpiredCache(retentionDays);
+            }
+          }
+
           const token = localStorage.getItem('github_token');
           if (!token) return;
 
