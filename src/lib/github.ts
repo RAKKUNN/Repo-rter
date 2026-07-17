@@ -4,9 +4,9 @@ import { mergeTrafficData } from './storage';
 
 const MOCK_DATA = false;
 
-function getAuthHeaders() {
+async function getAuthHeaders() {
   if (MOCK_DATA) return {};
-  const token = getGithubToken();
+  const token = await getGithubToken();
   if (!token) {
     throw new Error('No GitHub token found');
   }
@@ -26,7 +26,7 @@ export async function getUser() {
       avatar_url: 'https://avatars.githubusercontent.com/u/583231?v=4',
     };
   }
-  const headers = getAuthHeaders();
+  const headers = await getAuthHeaders();
   const res = await customFetch('https://api.github.com/user', { headers });
   if (!res.ok) throw new Error('Failed to fetch user');
   return res.json();
@@ -42,7 +42,7 @@ export async function getRepos() {
       { id: 5, name: 'pixel-ui', owner: { login: 'pixel-ninja' }, stargazers_count: 1200, forks_count: 150, open_issues_count: 1, description: 'Neo-brutalist UI component library' },
     ];
   }
-  const headers = getAuthHeaders();
+  const headers = await getAuthHeaders();
   let allRepos: any[] = [];
   let page = 1;
   let hasMore = true;
@@ -84,7 +84,7 @@ export async function getRepoTrafficViews(owner: string, repo: string) {
     const base = repo === 'awesome-project' ? 8000 : repo === 'next-dashboard' ? 5000 : 2000;
     return { views: generateMockTimeline(base, base / 2) };
   }
-  const headers = getAuthHeaders();
+  const headers = await getAuthHeaders();
   const res = await customFetch(`https://api.github.com/repos/${owner}/${repo}/traffic/views`, { headers });
   if (!res.ok) return null;
   const data = await res.json();
@@ -99,7 +99,7 @@ export async function getRepoTrafficClones(owner: string, repo: string) {
     const base = repo === 'awesome-project' ? 2000 : repo === 'next-dashboard' ? 1000 : 500;
     return { clones: generateMockTimeline(base, base / 3) };
   }
-  const headers = getAuthHeaders();
+  const headers = await getAuthHeaders();
   const res = await customFetch(`https://api.github.com/repos/${owner}/${repo}/traffic/clones`, { headers });
   if (!res.ok) return null;
   const data = await res.json();
@@ -117,7 +117,7 @@ export async function getRepoTrafficPaths(owner: string, repo: string) {
       { path: '/github/repo/pulls', title: 'Pull Requests', count: 8500, uniques: 4000 },
     ];
   }
-  const headers = getAuthHeaders();
+  const headers = await getAuthHeaders();
   const res = await customFetch(`https://api.github.com/repos/${owner}/${repo}/traffic/popular/paths`, { headers });
   if (!res.ok) return [];
   return res.json();
@@ -132,7 +132,7 @@ export async function getRepoTrafficReferrers(owner: string, repo: string) {
       { referrer: 'ycombinator.com', count: 15000, uniques: 14000 },
     ];
   }
-  const headers = getAuthHeaders();
+  const headers = await getAuthHeaders();
   const res = await customFetch(`https://api.github.com/repos/${owner}/${repo}/traffic/popular/referrers`, { headers });
   if (!res.ok) return [];
   return res.json();
@@ -147,7 +147,7 @@ export async function getRepoLanguages(owner: string, repo: string) {
       HTML: 5000
     };
   }
-  const headers = getAuthHeaders();
+  const headers = await getAuthHeaders();
   const res = await customFetch(`https://api.github.com/repos/${owner}/${repo}/languages`, { headers });
   if (!res.ok) return {};
   return res.json();
@@ -159,7 +159,7 @@ export async function getRepoPulls(owner: string, repo: string) {
       { state: 'open' }, { state: 'open' }, { state: 'closed' }, { state: 'closed' }
     ];
   }
-  const headers = getAuthHeaders();
+  const headers = await getAuthHeaders();
   const res = await customFetch(`https://api.github.com/repos/${owner}/${repo}/pulls?state=all&per_page=100`, { headers });
   if (!res.ok) return [];
   return res.json();
@@ -167,7 +167,7 @@ export async function getRepoPulls(owner: string, repo: string) {
 
 export async function getRepoIssues(owner: string, repo: string) {
   if (MOCK_DATA) return [];
-  const headers = getAuthHeaders();
+  const headers = await getAuthHeaders();
   const res = await customFetch(`https://api.github.com/repos/${owner}/${repo}/issues?state=all&per_page=100`, { headers });
   if (!res.ok) return [];
   return res.json();
@@ -179,7 +179,7 @@ export async function getRepoAlerts(owner: string, repo: string) {
     if (repo === 'next-dashboard') return [{ state: 'open' }];
     return [];
   }
-  const headers = getAuthHeaders();
+  const headers = await getAuthHeaders();
   try {
     const res = await customFetch(`https://api.github.com/repos/${owner}/${repo}/dependabot/alerts`, { headers });
     if (!res.ok) return [];
@@ -198,7 +198,7 @@ export async function getRepoMentions(repoName: string) {
       ]
     };
   }
-  const headers = getAuthHeaders();
+  const headers = await getAuthHeaders();
   try {
     const res = await customFetch(`https://api.github.com/search/issues?q=${encodeURIComponent(repoName)}+in:body`, { headers });
     if (!res.ok) return { items: [] };
@@ -234,7 +234,7 @@ export async function getRepoReleases(owner: string, repo: string) {
       }
     ];
   }
-  const headers = getAuthHeaders();
+  const headers = await getAuthHeaders();
   const res = await customFetch(`https://api.github.com/repos/${owner}/${repo}/releases?per_page=100`, { headers });
   if (!res.ok) return [];
   return res.json();

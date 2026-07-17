@@ -9,7 +9,7 @@ export default function Home() {
   const [isAuth, setIsAuth] = useState<boolean | null>(null);
 
   useEffect(() => {
-    setIsAuth(hasGithubToken());
+    hasGithubToken().then(setIsAuth);
   }, []);
 
   if (isAuth === null) return null; // Or a loading spinner

@@ -33,7 +33,7 @@ export function useBackgroundSync() {
             }
           }
 
-          const token = getGithubToken();
+          const token = await getGithubToken();
           if (!token) return;
 
           // 1. Fetch repositories

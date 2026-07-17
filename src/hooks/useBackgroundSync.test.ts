@@ -1,9 +1,16 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 
+const { keychain } = vi.hoisted(() => ({ keychain: new Map<string, string>() }));
+
 vi.mock('@tauri-apps/api/core', () => ({
   isTauri: () => true,
-  invoke: vi.fn(),
+  invoke: vi.fn(async (cmd: string, args: { key: string; value?: string }) => {
+    if (cmd === 'set_secret') { keychain.set(args.key, args.value!); return null; }
+    if (cmd === 'get_secret') { return keychain.get(args.key) ?? null; }
+    if (cmd === 'delete_secret') { keychain.delete(args.key); return null; }
+    return null;
+  }),
 }));
 
 
@@ -38,6 +45,7 @@ describe('useBackgroundSync', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     window.localStorage.clear();
+    keychain.clear();
     vi.mocked(getRepos).mockClear();
   });
 
@@ -48,7 +56,7 @@ describe('useBackgroundSync', () => {
   it('auth 모듈이 저장한 토큰으로 동기화를 시작한다', async () => {
     // 회귀 방지: 훅이 auth가 쓰지 않는 키('github_token')를 읽어
     // 초기 커밋부터 동기화가 조용히 조기 리턴하던 버그.
-    setGithubToken('test_pat_value');
+    await setGithubToken('test_pat_value');
 
     await runOneSyncCycle();
 

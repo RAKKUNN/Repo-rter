@@ -1,26 +1,21 @@
+import { getSecret, setSecret, deleteSecret } from './secrets';
+
 const MOCK_DATA = false;
 
-export function setGithubToken(token: string) {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('github_pat', token);
-  }
+export async function setGithubToken(token: string): Promise<void> {
+  await setSecret('github_pat', token);
 }
 
-export function removeGithubToken() {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem('github_pat');
-  }
+export async function removeGithubToken(): Promise<void> {
+  await deleteSecret('github_pat');
 }
 
-export function getGithubToken(): string | null {
+export async function getGithubToken(): Promise<string | null> {
   if (MOCK_DATA) return 'mock_token_for_screenshots';
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('github_pat');
-  }
-  return null;
+  return getSecret('github_pat');
 }
 
-export function hasGithubToken(): boolean {
+export async function hasGithubToken(): Promise<boolean> {
   if (MOCK_DATA) return true;
-  return !!getGithubToken();
+  return (await getGithubToken()) !== null;
 }

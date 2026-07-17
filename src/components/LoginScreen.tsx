@@ -28,7 +28,7 @@ export default function LoginScreen() {
     if (!token.trim()) return;
     setLoading(true);
     try {
-      setGithubToken(token);
+      await setGithubToken(token);
       window.location.reload();
     } catch (err) {
       console.error(err);
@@ -89,7 +89,7 @@ export default function LoginScreen() {
         
         if (data.access_token) {
           polling = false;
-          setGithubToken(data.access_token);
+          await setGithubToken(data.access_token);
           window.location.reload();
         } else if (data.error === 'authorization_pending') {
           // keep polling

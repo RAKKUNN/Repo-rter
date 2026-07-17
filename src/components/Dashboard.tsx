@@ -73,8 +73,8 @@ export default function Dashboard() {
     .sort((a: any, b: any) => b.stargazers_count - a.stargazers_count);
   const hiddenReposList = repos?.filter((r: any) => hiddenRepos[r.name]) || [];
 
-  const handleLogout = () => {
-    removeGithubToken();
+  const handleLogout = async () => {
+    await removeGithubToken();
     window.location.reload();
   };
 
