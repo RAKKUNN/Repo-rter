@@ -9,6 +9,7 @@ import { ThemeProvider } from 'next-themes';
 import { ToastProvider } from './ToastProvider';
 import { cleanExpiredCache } from '@/lib/storage';
 import { downloadAndMergeSync } from '@/lib/sync';
+import { migrateSecretsFromLocalStorage } from '@/lib/secrets';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -39,6 +40,15 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const runInit = async () => {
+      // 0. 평문 시크릿을 OS 키체인으로 이관한다.
+      //    아래 동기화 풀이 sync_webdav_pass와 sync_encryption_key를 읽으므로
+      //    반드시 그보다 먼저 끝나야 한다.
+      try {
+        await migrateSecretsFromLocalStorage();
+      } catch (e) {
+        console.error('Secret migration failed:', e);
+      }
+
       // 1. Pull remote data and merge
       try {
         const provider = localStorage.getItem('sync_provider');
