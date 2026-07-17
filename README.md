@@ -132,6 +132,12 @@ If Repo-rter saved your historical stats, please consider **starring the reposit
 
 ## 📝 Changelog
 
+### v0.4.3
+- Fixed background sync never running — the scheduler looked up a token key that no code ever wrote, so every cycle exited early since the initial release.
+- Moved Tauri crates from release candidates to stable, aligning the Rust side with the already-stable JS packages (minimum Rust version is now 1.77.2).
+- Split the 742-line translation file into per-language modules under `src/lib/locales/`. No translation content changed.
+- Added test coverage for traffic merging on both the Rust and TypeScript paths: date deduplication, chronological ordering, and retention of history past GitHub's 14-day window.
+
 ### v0.4.2
 - Added WebDAV cloud synchronization for backing up and restoring traffic logs across machines.
 - Implemented AES-256-GCM End-to-End Encryption (E2EE) using Web Crypto API to secure remote backups.
