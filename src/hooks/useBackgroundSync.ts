@@ -2,11 +2,12 @@ import { useEffect } from 'react';
 import { isTauri } from '@tauri-apps/api/core';
 import { sendNotification, isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
 import { getRepos, getRepoTrafficViews, getRepoTrafficClones } from '@/lib/github';
+import { getGithubToken } from '@/lib/auth';
 import { cleanExpiredCache } from '@/lib/storage';
 import { uploadSync } from '@/lib/sync';
 
 // Run background sync every 1 hour (3600000 ms)
-const SYNC_INTERVAL = 3600000;
+export const SYNC_INTERVAL = 3600000;
 
 export function useBackgroundSync() {
   useEffect(() => {
@@ -32,7 +33,7 @@ export function useBackgroundSync() {
             }
           }
 
-          const token = localStorage.getItem('github_token');
+          const token = getGithubToken();
           if (!token) return;
 
           // 1. Fetch repositories
