@@ -62,6 +62,11 @@ Considere me [patrocinar](https://github.com/sponsors/RAKKUNN)!
 
 ## 📝 Changelog
 
+### v0.4.4
+- Moved the GitHub token, WebDAV password, and E2EE passphrase out of browser `localStorage` into the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service).
+- Existing plaintext secrets are migrated automatically on first launch. The keychain copy is written and read back before the plaintext is removed.
+- Sync settings now save when you leave the field instead of on every keystroke.
+
 ### v0.4.3
 - Fixed background sync never running — the scheduler looked up a token key that no code ever wrote, so every cycle exited early since the initial release.
 - Moved Tauri crates from release candidates to stable, aligning the Rust side with the already-stable JS packages (minimum Rust version is now 1.77.2).
