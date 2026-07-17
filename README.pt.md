@@ -62,6 +62,11 @@ Considere me [patrocinar](https://github.com/sponsors/RAKKUNN)!
 
 ## 📝 Changelog
 
+### v0.4.2
+- Added WebDAV cloud synchronization for backing up and restoring traffic logs across machines.
+- Implemented AES-256-GCM End-to-End Encryption (E2EE) using Web Crypto API to secure remote backups.
+- Added native Rust bundle commands to optimize sync payload building and cache merging.
+
 ### v0.4.1
 - Added custom Data Retention Policy settings (auto-purging old traffic history).
 - Dynamically synchronized version strings inside the Settings About panel with package configuration.

@@ -8,6 +8,7 @@ import '@/lib/i18n';
 import { ThemeProvider } from 'next-themes';
 import { ToastProvider } from './ToastProvider';
 import { cleanExpiredCache } from '@/lib/storage';
+import { downloadAndMergeSync } from '@/lib/sync';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -37,7 +38,18 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const runCleanup = async () => {
+    const runInit = async () => {
+      // 1. Pull remote data and merge
+      try {
+        const provider = localStorage.getItem('sync_provider');
+        if (provider === 'webdav') {
+          await downloadAndMergeSync();
+        }
+      } catch (e) {
+        console.error('Failed startup sync pull:', e);
+      }
+
+      // 2. Run data retention cleanup
       const retentionDaysStr = localStorage.getItem('data_retention_days');
       if (retentionDaysStr) {
         const retentionDays = parseInt(retentionDaysStr, 10);
@@ -46,7 +58,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         }
       }
     };
-    runCleanup();
+    runInit();
   }, []);
 
   return (

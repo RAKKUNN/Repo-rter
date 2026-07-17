@@ -3,6 +3,7 @@ import { isTauri } from '@tauri-apps/api/core';
 import { sendNotification, isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
 import { getRepos, getRepoTrafficViews, getRepoTrafficClones } from '@/lib/github';
 import { cleanExpiredCache } from '@/lib/storage';
+import { uploadSync } from '@/lib/sync';
 
 // Run background sync every 1 hour (3600000 ms)
 const SYNC_INTERVAL = 3600000;
@@ -66,6 +67,16 @@ export function useBackgroundSync() {
           // Update sync index for next iteration
           const nextStartIndex = endIndex >= sortedRepos.length ? 0 : endIndex;
           localStorage.setItem('background_sync_last_index', nextStartIndex.toString());
+
+          // 2.5 Upload merged cache to cloud sync
+          try {
+            const provider = localStorage.getItem('sync_provider');
+            if (provider === 'webdav') {
+              await uploadSync();
+            }
+          } catch (e) {
+            console.error('Failed background sync cloud push:', e);
+          }
 
           // 3. Send Notification
           if (permissionGranted) {

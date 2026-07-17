@@ -1,13 +1,14 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Globe, Moon, Sun, User, LogOut, Info, Settings as SettingsIcon, Download, Database, Upload } from 'lucide-react';
+import { X, Globe, Moon, Sun, User, LogOut, Info, Settings as SettingsIcon, Download, Database, Upload, Cloud, RefreshCw } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'next-themes';
 import { useToast } from './ToastProvider';
 import { useQueryClient } from '@tanstack/react-query';
 import { mergeTrafficData, cleanExpiredCache } from '@/lib/storage';
+import { uploadSync, downloadAndMergeSync } from '@/lib/sync';
 import packageInfo from '../../package.json';
 
 interface SettingsModalProps {
@@ -20,7 +21,7 @@ interface SettingsModalProps {
   handleLogout: () => void;
 }
 
-type TabType = 'general' | 'appearance' | 'data' | 'account' | 'about';
+type TabType = 'general' | 'appearance' | 'data' | 'sync' | 'account' | 'about';
 
 export default function SettingsModal({
   isOpen,
@@ -56,6 +57,45 @@ export default function SettingsModal({
     } catch (e) {
       console.error('Failed to apply retention policy:', e);
       toast('Failed to purge old data.', 'error');
+    }
+  };
+
+  const [syncProvider, setSyncProvider] = useState<'none' | 'webdav'>('none');
+  const [webdavUrl, setWebdavUrl] = useState('');
+  const [webdavUser, setWebdavUser] = useState('');
+  const [webdavPass, setWebdavPass] = useState('');
+  const [encryptionKey, setEncryptionKey] = useState('');
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setSyncProvider((localStorage.getItem('sync_provider') as 'none' | 'webdav') || 'none');
+      setWebdavUrl(localStorage.getItem('sync_webdav_url') || '');
+      setWebdavUser(localStorage.getItem('sync_webdav_user') || '');
+      setWebdavPass(localStorage.getItem('sync_webdav_pass') || '');
+      setEncryptionKey(localStorage.getItem('sync_encryption_key') || '');
+    }
+  }, []);
+
+  const handleManualSync = async () => {
+    if (syncProvider === 'none') return;
+    if (!webdavUrl || !webdavUser || !webdavPass || !encryptionKey) {
+      toast('Please fill out all sync configuration fields first.', 'error');
+      return;
+    }
+    
+    setIsSyncing(true);
+    toast('Starting encrypted synchronization...', 'info');
+    try {
+      await downloadAndMergeSync();
+      await uploadSync();
+      toast('Sync completed successfully!', 'success');
+      queryClient.invalidateQueries();
+    } catch (e: any) {
+      console.error('Sync failed:', e);
+      toast(`Sync failed: ${e.message || e}`, 'error');
+    } finally {
+      setIsSyncing(false);
     }
   };
 
@@ -206,6 +246,12 @@ export default function SettingsModal({
                   label={t('data')} 
                   isActive={activeTab === 'data'} 
                   onClick={() => setActiveTab('data')} 
+                />
+                <TabButton 
+                  icon={Cloud} 
+                  label={t('sync') || 'Sync'} 
+                  isActive={activeTab === 'sync'} 
+                  onClick={() => setActiveTab('sync')} 
                 />
                 <TabButton 
                   icon={User} 
@@ -382,6 +428,111 @@ export default function SettingsModal({
                           <option value="365">{t('1year') || '1 Year'}</option>
                         </select>
                       </div>
+                    </div>
+                  </section>
+                </div>
+              )}
+
+              {activeTab === 'sync' && (
+                <div className="space-y-8 animate-in fade-in duration-300">
+                  <section>
+                    <h3 className="text-xl font-bold mb-4 border-b-2 border-foreground/20 pb-2">{t('cloudSync') || 'Cloud Synchronization'}</h3>
+                    <div className="p-6 border-2 border-[var(--pixel-border)] bg-foreground/5 space-y-6">
+                      
+                      <div className="flex flex-col gap-2">
+                        <label className="font-bold text-lg">{t('syncProvider') || 'Sync Provider'}</label>
+                        <select
+                          value={syncProvider}
+                          onChange={(e) => {
+                            const val = e.target.value as 'none' | 'webdav';
+                            setSyncProvider(val);
+                            localStorage.setItem('sync_provider', val);
+                          }}
+                          className="px-4 py-2 border-2 border-[var(--pixel-border)] font-bold bg-[var(--pixel-panel-bg)] hover:bg-foreground/5 cursor-pointer outline-none focus:ring-2 focus:ring-pixel-blue"
+                        >
+                          <option value="none">{t('none') || 'None (Local Only)'}</option>
+                          <option value="webdav">WebDAV</option>
+                        </select>
+                      </div>
+
+                      {syncProvider === 'webdav' && (
+                        <div className="space-y-4">
+                          <div className="flex flex-col gap-2">
+                            <label className="font-bold">{t('webdavUrl') || 'WebDAV URL'}</label>
+                            <input
+                              type="text"
+                              value={webdavUrl}
+                              placeholder="https://example.com/remote.php/dav/files/username/"
+                              onChange={(e) => {
+                                setWebdavUrl(e.target.value);
+                                localStorage.setItem('sync_webdav_url', e.target.value);
+                              }}
+                              className="px-4 py-2 border-2 border-[var(--pixel-border)] bg-[var(--pixel-panel-bg)] outline-none focus:ring-2 focus:ring-pixel-blue font-mono text-sm"
+                            />
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="flex flex-col gap-2">
+                              <label className="font-bold">{t('username') || 'Username'}</label>
+                              <input
+                                type="text"
+                                value={webdavUser}
+                                placeholder="Username"
+                                onChange={(e) => {
+                                  setWebdavUser(e.target.value);
+                                  localStorage.setItem('sync_webdav_user', e.target.value);
+                                }}
+                                className="px-4 py-2 border-2 border-[var(--pixel-border)] bg-[var(--pixel-panel-bg)] outline-none focus:ring-2 focus:ring-pixel-blue text-sm"
+                              />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <label className="font-bold">{t('passwordAppPass') || 'Password / App Password'}</label>
+                              <input
+                                type="password"
+                                value={webdavPass}
+                                placeholder="Password"
+                                onChange={(e) => {
+                                  setWebdavPass(e.target.value);
+                                  localStorage.setItem('sync_webdav_pass', e.target.value);
+                                }}
+                                className="px-4 py-2 border-2 border-[var(--pixel-border)] bg-[var(--pixel-panel-bg)] outline-none focus:ring-2 focus:ring-pixel-blue text-sm"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col gap-2">
+                            <label className="font-bold flex items-center gap-1">
+                              {t('encryptionPassphrase') || 'Encryption Passphrase'}
+                              <span className="text-xs font-normal text-pixel-purple">({t('e2eeActive') || 'For E2EE'})</span>
+                            </label>
+                            <input
+                              type="password"
+                              value={encryptionKey}
+                              placeholder="Never sent to servers. Must be kept safe."
+                              onChange={(e) => {
+                                setEncryptionKey(e.target.value);
+                                localStorage.setItem('sync_encryption_key', e.target.value);
+                              }}
+                              className="px-4 py-2 border-2 border-[var(--pixel-border)] bg-[var(--pixel-panel-bg)] outline-none focus:ring-2 focus:ring-pixel-blue text-sm"
+                            />
+                            <p className="text-xs opacity-60">
+                              {t('encryptionDesc') || 'Your local data is encrypted using AES-256-GCM before upload. Keep this key safe to restore stats on another device.'}
+                            </p>
+                          </div>
+
+                          <div className="pt-4 border-t border-foreground/10">
+                            <button
+                              onClick={handleManualSync}
+                              disabled={isSyncing}
+                              className="flex items-center gap-2 px-6 py-3 bg-pixel-blue text-white border-2 border-[var(--pixel-border)] shadow-[4px_4px_0px_var(--pixel-border)] hover:bg-pixel-blue/90 active:translate-y-[2px] active:shadow-none transition-all font-bold disabled:opacity-50"
+                            >
+                              <RefreshCw className={`w-5 h-5 ${isSyncing ? 'animate-spin' : ''}`} />
+                              {isSyncing ? (t('syncing') || 'Syncing...') : (t('syncNow') || 'Sync Now')}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
                     </div>
                   </section>
                 </div>
