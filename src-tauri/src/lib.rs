@@ -5,6 +5,8 @@ use tauri::{
 };
 use std::fs;
 
+mod secrets;
+
 #[tauri::command]
 fn save_traffic_data(app_handle: tauri::AppHandle, repo_key: String, data_type: String, data: String) -> Result<(), String> {
     let mut path = app_handle.path().app_data_dir().map_err(|e| e.to_string())?;
@@ -193,7 +195,10 @@ pub fn run() {
             load_traffic_data, 
             clean_expired_traffic_data,
             bundle_traffic_cache,
-            merge_bundled_traffic_data
+            merge_bundled_traffic_data,
+            secrets::set_secret,
+            secrets::get_secret,
+            secrets::delete_secret
         ])
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_shell::init())
