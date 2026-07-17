@@ -239,3 +239,83 @@ pub fn run() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+
+#[cfg(test)]
+mod tests {
+    use super::merge_lists;
+    use serde_json::json;
+
+    fn point(timestamp: &str, count: u64) -> serde_json::Value {
+        json!({ "timestamp": timestamp, "count": count, "uniques": 1 })
+    }
+
+    #[test]
+    fn merges_disjoint_days_in_chronological_order() {
+        let existing = vec![point("2026-06-01T00:00:00Z", 10)];
+        let incoming = vec![point("2026-05-01T00:00:00Z", 5)];
+
+        let merged = merge_lists(&existing, &incoming);
+
+        assert_eq!(merged.len(), 2);
+        assert_eq!(merged[0]["timestamp"], "2026-05-01T00:00:00Z");
+        assert_eq!(merged[1]["timestamp"], "2026-06-01T00:00:00Z");
+    }
+
+    #[test]
+    fn incoming_overwrites_same_day() {
+        let existing = vec![point("2026-06-01T00:00:00Z", 10)];
+        let incoming = vec![point("2026-06-01T00:00:00Z", 42)];
+
+        let merged = merge_lists(&existing, &incoming);
+
+        assert_eq!(merged.len(), 1, "같은 날짜가 중복 항목을 만들면 안 된다");
+        assert_eq!(merged[0]["count"], 42);
+    }
+
+    #[test]
+    fn same_day_different_clock_times_collapse_to_one_entry() {
+        // 병합 키는 timestamp의 앞 10자다. GitHub가 같은 날을 다른 시각으로
+        // 돌려줘도 하루당 한 항목이어야 한다.
+        let existing = vec![point("2026-06-01T00:00:00Z", 10)];
+        let incoming = vec![point("2026-06-01T13:45:00Z", 11)];
+
+        let merged = merge_lists(&existing, &incoming);
+
+        assert_eq!(merged.len(), 1);
+        assert_eq!(merged[0]["count"], 11);
+    }
+
+    #[test]
+    fn retains_history_beyond_github_14_day_window() {
+        // 앱의 존재 이유: GitHub 응답에서 빠진 과거 데이터가 살아남아야 한다.
+        let existing = vec![point("2026-01-01T00:00:00Z", 1), point("2026-02-01T00:00:00Z", 2)];
+        let incoming = vec![point("2026-07-01T00:00:00Z", 3)];
+
+        let merged = merge_lists(&existing, &incoming);
+
+        assert_eq!(merged.len(), 3);
+        assert_eq!(merged[0]["timestamp"], "2026-01-01T00:00:00Z");
+        assert_eq!(merged[2]["timestamp"], "2026-07-01T00:00:00Z");
+    }
+
+    #[test]
+    fn drops_entries_without_timestamp() {
+        let existing = vec![json!({ "count": 1 })];
+        let incoming = vec![point("2026-06-01T00:00:00Z", 2)];
+
+        let merged = merge_lists(&existing, &incoming);
+
+        assert_eq!(merged.len(), 1);
+        assert_eq!(merged[0]["timestamp"], "2026-06-01T00:00:00Z");
+    }
+
+    #[test]
+    fn empty_incoming_preserves_existing() {
+        let existing = vec![point("2026-06-01T00:00:00Z", 10)];
+
+        let merged = merge_lists(&existing, &vec![]);
+
+        assert_eq!(merged.len(), 1);
+        assert_eq!(merged[0]["count"], 10);
+    }
+}
