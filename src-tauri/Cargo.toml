@@ -1,28 +1,26 @@
 [package]
 name = "app"
-version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
-license = ""
-repository = ""
+version = "0.4.3"
+description = "Local-first desktop dashboard that permanently stores GitHub repository traffic and release download insights"
+authors = ["RAKKUNN"]
+license = "MIT"
+repository = "https://github.com/RAKKUNN/Repo-rter"
 edition = "2021"
-rust-version = "1.71"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+rust-version = "1.77.2"
 
 [lib]
 name = "app_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2.0.0-rc.13", features = [] }
+tauri-build = { version = "2.6.3", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
-tauri = { version = "2.0.0-rc.17", features = ["tray-icon"] }
-tauri-plugin-log = "2.0.0-rc"
-tauri-plugin-http = "2.0.0-rc"
-tauri-plugin-shell = "2.0.0-rc"
-tauri-plugin-notification = "2.0.0-rc"
+tauri = { version = "2.11.5", features = ["tray-icon"] }
+tauri-plugin-log = "2.9.0"
+tauri-plugin-http = "2.5.9"
+tauri-plugin-shell = "2.3.5"
+tauri-plugin-notification = "2.3.3"
