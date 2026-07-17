@@ -9,6 +9,7 @@ import { useToast } from './ToastProvider';
 import { useQueryClient } from '@tanstack/react-query';
 import { mergeTrafficData, cleanExpiredCache } from '@/lib/storage';
 import { uploadSync, downloadAndMergeSync } from '@/lib/sync';
+import { getSecret, setSecret } from '@/lib/secrets';
 import packageInfo from '../../package.json';
 
 interface SettingsModalProps {
@@ -72,8 +73,11 @@ export default function SettingsModal({
       setSyncProvider((localStorage.getItem('sync_provider') as 'none' | 'webdav') || 'none');
       setWebdavUrl(localStorage.getItem('sync_webdav_url') || '');
       setWebdavUser(localStorage.getItem('sync_webdav_user') || '');
-      setWebdavPass(localStorage.getItem('sync_webdav_pass') || '');
-      setEncryptionKey(localStorage.getItem('sync_encryption_key') || '');
+
+      (async () => {
+        setWebdavPass((await getSecret('sync_webdav_pass')) || '');
+        setEncryptionKey((await getSecret('sync_encryption_key')) || '');
+      })();
     }
   }, []);
 
@@ -491,10 +495,8 @@ export default function SettingsModal({
                                 type="password"
                                 value={webdavPass}
                                 placeholder="Password"
-                                onChange={(e) => {
-                                  setWebdavPass(e.target.value);
-                                  localStorage.setItem('sync_webdav_pass', e.target.value);
-                                }}
+                                onChange={(e) => setWebdavPass(e.target.value)}
+                                onBlur={(e) => { void setSecret('sync_webdav_pass', e.target.value); }}
                                 className="px-4 py-2 border-2 border-[var(--pixel-border)] bg-[var(--pixel-panel-bg)] outline-none focus:ring-2 focus:ring-pixel-blue text-sm"
                               />
                             </div>
@@ -509,10 +511,8 @@ export default function SettingsModal({
                               type="password"
                               value={encryptionKey}
                               placeholder="Never sent to servers. Must be kept safe."
-                              onChange={(e) => {
-                                setEncryptionKey(e.target.value);
-                                localStorage.setItem('sync_encryption_key', e.target.value);
-                              }}
+                              onChange={(e) => setEncryptionKey(e.target.value)}
+                              onBlur={(e) => { void setSecret('sync_encryption_key', e.target.value); }}
                               className="px-4 py-2 border-2 border-[var(--pixel-border)] bg-[var(--pixel-panel-bg)] outline-none focus:ring-2 focus:ring-pixel-blue text-sm"
                             />
                             <p className="text-xs opacity-60">

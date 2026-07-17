@@ -1,6 +1,7 @@
 import { isTauri, invoke } from '@tauri-apps/api/core';
 import { fetch } from '@tauri-apps/plugin-http';
 import { encryptData, decryptData } from './crypto';
+import { getSecret } from './secrets';
 
 // Helper to construct WebDAV Authorization header
 function getAuthHeader(user: string, pass: string): string {
@@ -25,8 +26,8 @@ export async function uploadSync(): Promise<void> {
 
   const url = localStorage.getItem('sync_webdav_url');
   const user = localStorage.getItem('sync_webdav_user');
-  const pass = localStorage.getItem('sync_webdav_pass');
-  const encryptionKey = localStorage.getItem('sync_encryption_key') || undefined;
+  const pass = await getSecret('sync_webdav_pass');
+  const encryptionKey = (await getSecret('sync_encryption_key')) || undefined;
 
   if (!url || !user || !pass) {
     throw new Error('WebDAV sync configuration is incomplete.');
@@ -69,8 +70,8 @@ export async function downloadAndMergeSync(): Promise<boolean> {
 
   const url = localStorage.getItem('sync_webdav_url');
   const user = localStorage.getItem('sync_webdav_user');
-  const pass = localStorage.getItem('sync_webdav_pass');
-  const encryptionKey = localStorage.getItem('sync_encryption_key') || undefined;
+  const pass = await getSecret('sync_webdav_pass');
+  const encryptionKey = (await getSecret('sync_encryption_key')) || undefined;
 
   if (!url || !user || !pass) {
     throw new Error('WebDAV sync configuration is incomplete.');
