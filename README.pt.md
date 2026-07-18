@@ -62,6 +62,10 @@ Considere me [patrocinar](https://github.com/sponsors/RAKKUNN)!
 
 ## 📝 Changelog
 
+### v0.4.5
+- Fixed the settings modal disappearing instantly on close instead of animating out.
+- Added `prefers-reduced-motion` support so animations are minimized for users who request reduced motion in their OS settings.
+
 ### v0.4.4
 - Moved the GitHub token, WebDAV password, and E2EE passphrase out of browser `localStorage` into the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service).
 - Existing plaintext secrets are migrated automatically on first launch. The keychain copy is written and read back before the plaintext is removed.
