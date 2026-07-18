@@ -4,6 +4,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { useState, useEffect } from 'react';
+import { MotionConfig } from 'framer-motion';
 import '@/lib/i18n';
 import { ThemeProvider } from 'next-themes';
 import { ToastProvider } from './ToastProvider';
@@ -72,15 +73,17 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-      <ToastProvider>
-        <PersistQueryClientProvider 
-          client={queryClient} 
-          persistOptions={{ persister }}
-        >
-          {children}
-        </PersistQueryClientProvider>
-      </ToastProvider>
-    </ThemeProvider>
+    <MotionConfig reducedMotion="user">
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ToastProvider>
+          <PersistQueryClientProvider
+            client={queryClient}
+            persistOptions={{ persister }}
+          >
+            {children}
+          </PersistQueryClientProvider>
+        </ToastProvider>
+      </ThemeProvider>
+    </MotionConfig>
   );
 }
