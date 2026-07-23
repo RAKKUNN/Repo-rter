@@ -16,6 +16,14 @@
   [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=for-the-badge)](https://github.com/RAKKUNN/Repo-rter/releases)
 </div>
 
+<div align="center">
+  <a href="ABOUT.md"><b>📖 About</b></a> &nbsp;|&nbsp;
+  <a href="ARCHITECTURE.md"><b>🏗️ Architecture</b></a> &nbsp;|&nbsp;
+  <a href="SECURITY.md"><b>🔒 Security</b></a> &nbsp;|&nbsp;
+  <a href="CHANGELOG.md"><b>📝 Full Changelog</b></a> &nbsp;|&nbsp;
+  <a href="CONTRIBUTING.md"><b>🤝 Contributing</b></a>
+</div>
+
 <br />
 
 ## 📸 Screenshots
@@ -141,36 +149,7 @@ If Repo-rter saved your historical stats, please consider **starring the reposit
 - Existing plaintext secrets are migrated automatically on first launch. The keychain copy is written and read back before the plaintext is removed.
 - Sync settings now save when you leave the field instead of on every keystroke.
 
-### v0.4.3
-- Fixed background sync never running — the scheduler looked up a token key that no code ever wrote, so every cycle exited early since the initial release.
-- Moved Tauri crates from release candidates to stable, aligning the Rust side with the already-stable JS packages (minimum Rust version is now 1.77.2).
-- Split the 742-line translation file into per-language modules under `src/lib/locales/`. No translation content changed.
-- Added test coverage for traffic merging on both the Rust and TypeScript paths: date deduplication, chronological ordering, and retention of history past GitHub's 14-day window.
-
-### v0.4.2
-- Added WebDAV cloud synchronization for backing up and restoring traffic logs across machines.
-- Implemented AES-256-GCM End-to-End Encryption (E2EE) using Web Crypto API to secure remote backups.
-- Added native Rust bundle commands to optimize sync payload building and cache merging.
-
-### v0.4.1
-- Added custom Data Retention Policy settings (auto-purging old traffic history).
-- Dynamically synchronized version strings inside the Settings About panel with package configuration.
-
-### v0.4.0
-- Migrated traffic cache from `localStorage` to native OS file storage (safe from system cache purges).
-- Added JSON backup data import feature to restore stats across devices.
-- Improved background sync with sliding-window repository rotation (safely syncs all repositories over time).
-- Refactored documentation and project structure for production-ready open-source packaging.
-
-### v0.3.0
-- Added release asset download statistics tracking.
-- Added Markdown report exporting (views, clones, referrers, paths, languages).
-
-### v0.2.0
-- Initial open-source release.
-- Core traffic tracking (views, clones, paths, referrers).
-- Multi-language support (12 languages).
-- Neo-Brutalist UI and system tray background syncing.
+> 💡 **For the complete historical changelog across all releases, see [CHANGELOG.md](CHANGELOG.md).**
 
 ---
 
