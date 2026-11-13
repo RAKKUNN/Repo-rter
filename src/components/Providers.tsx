@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { MotionConfig } from 'framer-motion';
 import '@/lib/i18n';
 import { ThemeProvider } from 'next-themes';
+import { UIThemeProvider } from '@/lib/themes';
 import { ToastProvider } from './ToastProvider';
 import { cleanExpiredCache } from '@/lib/storage';
 import { downloadAndMergeSync } from '@/lib/sync';
@@ -18,16 +19,21 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 60 * 1000 * 5, // 5 minutes
+            staleTime: 60 * 1000 * 10, // 10 minutes — prevents redundant refetches when switching repos/filters
+            gcTime: 60 * 1000 * 30, // 30 minutes in-memory retention
             refetchOnWindowFocus: false,
+            retry: 1,
           },
         },
       })
   );
 
+  // Throttle localStorage persistence and only persist lightweight metadata queries
+  // (Traffic data is already persisted natively via Rust filesystem I/O)
   const [persister] = useState(() =>
     createSyncStoragePersister({
       storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+      throttleTime: 3000,
     })
   );
 
@@ -75,14 +81,24 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <MotionConfig reducedMotion="user">
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-        <ToastProvider>
-          <PersistQueryClientProvider
-            client={queryClient}
-            persistOptions={{ persister }}
-          >
-            {children}
-          </PersistQueryClientProvider>
-        </ToastProvider>
+        <UIThemeProvider>
+          <ToastProvider>
+            <PersistQueryClientProvider
+              client={queryClient}
+              persistOptions={{
+                persister,
+                dehydrateOptions: {
+                  shouldDehydrateQuery: (query) => {
+                    const key0 = query.queryKey[0];
+                    return key0 === 'githubUser' || key0 === 'githubRepos';
+                  },
+                },
+              }}
+            >
+              {children}
+            </PersistQueryClientProvider>
+          </ToastProvider>
+        </UIThemeProvider>
       </ThemeProvider>
     </MotionConfig>
   );

@@ -8,11 +8,25 @@ function getAuthHeader(user: string, pass: string): string {
   return 'Basic ' + window.btoa(user + ':' + pass);
 }
 
-// Helper to format WebDAV URL
-function getSyncFileUrl(baseUrl: string): string {
-  return baseUrl.endsWith('/') 
-    ? `${baseUrl}repo_rter_sync.enc` 
-    : `${baseUrl}/repo_rter_sync.enc`;
+// Helper to format and validate WebDAV URL (enforce HTTPS except localhost)
+export function validateWebdavUrl(baseUrl: string): string {
+  const trimmed = baseUrl.trim();
+  let parsed: URL;
+  try {
+    parsed = new URL(trimmed);
+  } catch {
+    throw new Error('Invalid WebDAV URL format.');
+  }
+  const isLocalhost =
+    parsed.hostname === 'localhost' ||
+    parsed.hostname === '127.0.0.1' ||
+    parsed.hostname === '[::1]';
+  if (parsed.protocol !== 'https:' && !(parsed.protocol === 'http:' && isLocalhost)) {
+    throw new Error('WebDAV URL must use HTTPS for secure credential transmission.');
+  }
+  return trimmed.endsWith('/')
+    ? `${trimmed}repo_rter_sync.enc`
+    : `${trimmed}/repo_rter_sync.enc`;
 }
 
 /**
@@ -24,23 +38,28 @@ export async function uploadSync(): Promise<void> {
   const provider = localStorage.getItem('sync_provider');
   if (provider !== 'webdav') return;
 
-  const url = localStorage.getItem('sync_webdav_url');
-  const user = localStorage.getItem('sync_webdav_user');
+  const url = localStorage.getItem('sync_webdav_url')?.trim();
+  const user = localStorage.getItem('sync_webdav_user')?.trim();
+  if (!url || !user) {
+    throw new Error('WebDAV URL and Username are required.');
+  }
+
   const pass = await getSecret('sync_webdav_pass');
   const encryptionKey = (await getSecret('sync_encryption_key')) || undefined;
 
-  if (!url || !user || !pass) {
-    throw new Error('WebDAV sync configuration is incomplete.');
+  if (!pass || !encryptionKey?.trim()) {
+    throw new Error('WebDAV sync configuration (including Encryption Passphrase) is incomplete.');
   }
+
+  const fileUrl = validateWebdavUrl(url);
 
   // 1. Get bundled traffic data from Rust backend
   const bundleJson = await invoke<string>('bundle_traffic_cache');
 
-  // 2. Encrypt the data
+  // 2. Encrypt the data (fails closed if encryptionKey is missing)
   const encryptedPayload = await encryptData(bundleJson, encryptionKey);
 
   // 3. Upload to WebDAV via PUT request
-  const fileUrl = getSyncFileUrl(url);
   const auth = getAuthHeader(user, pass);
 
   const response = await fetch(fileUrl, {
@@ -68,16 +87,20 @@ export async function downloadAndMergeSync(): Promise<boolean> {
   const provider = localStorage.getItem('sync_provider');
   if (provider !== 'webdav') return false;
 
-  const url = localStorage.getItem('sync_webdav_url');
-  const user = localStorage.getItem('sync_webdav_user');
+  const url = localStorage.getItem('sync_webdav_url')?.trim();
+  const user = localStorage.getItem('sync_webdav_user')?.trim();
+  if (!url || !user) {
+    throw new Error('WebDAV URL and Username are required.');
+  }
+
   const pass = await getSecret('sync_webdav_pass');
   const encryptionKey = (await getSecret('sync_encryption_key')) || undefined;
 
-  if (!url || !user || !pass) {
-    throw new Error('WebDAV sync configuration is incomplete.');
+  if (!pass || !encryptionKey?.trim()) {
+    throw new Error('WebDAV sync configuration (including Encryption Passphrase) is incomplete.');
   }
 
-  const fileUrl = getSyncFileUrl(url);
+  const fileUrl = validateWebdavUrl(url);
   const auth = getAuthHeader(user, pass);
 
   // 1. Download file

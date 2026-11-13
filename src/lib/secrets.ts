@@ -7,17 +7,41 @@ import { isTauri, invoke } from '@tauri-apps/api/core';
 export const SECRET_KEYS = ['github_pat', 'sync_webdav_pass', 'sync_encryption_key'] as const;
 export type SecretKey = (typeof SECRET_KEYS)[number];
 
+/**
+ * 동시 요청(In-flight) 중복 제거 맵.
+ * 앱 시작 시 수십 개의 API 요청이 동시에 getSecret('github_pat')을 호출해도
+ * 단일 IPC Promise를 공유하여 중복 키체인 호출을 막는다.
+ * (프로세스 수명 동안의 영구 메모리 캐시는 Rust 백엔드 `secrets.rs`의 Mutex 캐시가 담당한다.)
+ */
+const inFlightRequests = new Map<SecretKey, Promise<string | null>>();
+
+export function clearSecretMemoryCache(): void {
+  inFlightRequests.clear();
+}
+
 export async function getSecret(key: SecretKey): Promise<string | null> {
   if (typeof window === 'undefined') return null;
   if (!isTauri()) return localStorage.getItem(key);
 
-  const stored = await invoke<string | null>('get_secret', { key });
-  if (stored !== null) return stored;
+  const existingPromise = inFlightRequests.get(key);
+  if (existingPromise) {
+    return existingPromise;
+  }
 
-  // 키체인에 없다면 아직 이관되지 않은 평문일 수 있다.
-  // 이 폴백 덕분에 마이그레이션 완료 여부와 무관하게 앱이 동작한다.
-  // 마이그레이션이 평문을 지우면 여기서 자연히 null이 된다.
-  return localStorage.getItem(key);
+  const fetchPromise = (async () => {
+    try {
+      const stored = await invoke<string | null>('get_secret', { key });
+      if (stored !== null) return stored;
+
+      // 키체인에 없다면 아직 이관되지 않은 평문일 수 있다.
+      return localStorage.getItem(key);
+    } finally {
+      inFlightRequests.delete(key);
+    }
+  })();
+
+  inFlightRequests.set(key, fetchPromise);
+  return fetchPromise;
 }
 
 export async function setSecret(key: SecretKey, value: string): Promise<void> {
@@ -27,14 +51,15 @@ export async function setSecret(key: SecretKey, value: string): Promise<void> {
     return;
   }
 
+  inFlightRequests.delete(key);
   // 키체인 실패 시 localStorage로 폴백하지 않는다.
-  // 조용히 평문으로 쓰면 이 기능의 목적이 사라진다.
   await invoke('set_secret', { key, value });
   localStorage.removeItem(key);
 }
 
 export async function deleteSecret(key: SecretKey): Promise<void> {
   if (typeof window === 'undefined') return;
+  inFlightRequests.delete(key);
   localStorage.removeItem(key);
   if (isTauri()) await invoke('delete_secret', { key });
 }

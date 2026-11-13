@@ -4,27 +4,77 @@ use tauri::{
     Manager,
 };
 use std::fs;
+use std::path::Path;
 
 mod secrets;
 
+const ALLOWED_DATA_TYPES: &[&str] = &["views", "clones"];
+
+fn validate_data_type(data_type: &str) -> Result<(), String> {
+    if ALLOWED_DATA_TYPES.contains(&data_type) {
+        Ok(())
+    } else {
+        Err(format!("Invalid data_type '{}'. Allowed: views, clones", data_type))
+    }
+}
+
+/// Validates `repo_key` (e.g. "owner/repo" or "repo") and converts `/` into `__`.
+/// Rejects path traversal sequences (`..`), backslashes, null bytes, or unsafe characters.
+fn sanitize_repo_key(repo_key: &str) -> Result<String, String> {
+    let trimmed = repo_key.trim();
+    if trimmed.is_empty() || trimmed.len() > 200 {
+        return Err("Invalid repository key length".to_string());
+    }
+    if trimmed.contains("..")
+        || trimmed.contains('\\')
+        || trimmed.contains('\0')
+        || trimmed.starts_with('/')
+        || trimmed.ends_with('/')
+        || trimmed.starts_with('.')
+    {
+        return Err(format!("Unsafe repository key rejected: {}", repo_key));
+    }
+    if !trimmed
+        .chars()
+        .all(|c| c.is_ascii_alphanumeric() || matches!(c, '-' | '_' | '.' | '/'))
+    {
+        return Err(format!("Repository key contains disallowed characters: {}", repo_key));
+    }
+    Ok(trimmed.replace('/', "__"))
+}
+
+/// Writes content to a temporary `.tmp` sibling file first, then atomically renames it
+/// to `target_path` so an interrupted write or crash never leaves a corrupted JSON file.
+fn write_atomic(target_path: &Path, data: &str) -> Result<(), String> {
+    let tmp_path = target_path.with_extension("json.tmp");
+    fs::write(&tmp_path, data).map_err(|e| e.to_string())?;
+    fs::rename(&tmp_path, target_path).map_err(|e| {
+        let _ = fs::remove_file(&tmp_path);
+        e.to_string()
+    })
+}
+
 #[tauri::command]
 fn save_traffic_data(app_handle: tauri::AppHandle, repo_key: String, data_type: String, data: String) -> Result<(), String> {
+    validate_data_type(&data_type)?;
+    let safe_repo_key = sanitize_repo_key(&repo_key)?;
+
     let mut path = app_handle.path().app_data_dir().map_err(|e| e.to_string())?;
     fs::create_dir_all(&path).map_err(|e| e.to_string())?;
     
-    let safe_repo_key = repo_key.replace("/", "__");
     let filename = format!("traffic_{}_{}.json", data_type, safe_repo_key);
     path.push(filename);
     
-    fs::write(path, data).map_err(|e| e.to_string())?;
-    Ok(())
+    write_atomic(&path, &data)
 }
 
 #[tauri::command]
 fn load_traffic_data(app_handle: tauri::AppHandle, repo_key: String, data_type: String) -> Result<String, String> {
+    validate_data_type(&data_type)?;
+    let safe_repo_key = sanitize_repo_key(&repo_key)?;
+
     let mut path = app_handle.path().app_data_dir().map_err(|e| e.to_string())?;
     
-    let safe_repo_key = repo_key.replace("/", "__");
     let filename = format!("traffic_{}_{}.json", data_type, safe_repo_key);
     path.push(filename);
     
@@ -48,7 +98,9 @@ fn clean_expired_traffic_data(app_handle: tauri::AppHandle, threshold_str: Strin
         let file_path = entry.path();
         if file_path.is_file() {
             let filename = file_path.file_name().unwrap().to_string_lossy();
-            if filename.starts_with("traffic_views_") || filename.starts_with("traffic_clones_") {
+            if (filename.starts_with("traffic_views_") || filename.starts_with("traffic_clones_"))
+                && filename.ends_with(".json")
+            {
                 let content = fs::read_to_string(&file_path).map_err(|e| e.to_string())?;
                 if let Ok(mut json_arr) = serde_json::from_str::<serde_json::Value>(&content) {
                     if let Some(arr) = json_arr.as_array_mut() {
@@ -64,7 +116,7 @@ fn clean_expired_traffic_data(app_handle: tauri::AppHandle, threshold_str: Strin
                         
                         if arr.len() != original_len {
                             let updated_content = serde_json::to_string(arr).map_err(|e| e.to_string())?;
-                            fs::write(&file_path, updated_content).map_err(|e| e.to_string())?;
+                            write_atomic(&file_path, &updated_content)?;
                         }
                     }
                 }
@@ -147,7 +199,7 @@ fn merge_bundled_traffic_data(app_handle: tauri::AppHandle, bundle_json: String)
     // Process views
     for (repo_key, incoming_val) in views {
         if let Some(incoming_arr) = incoming_val.as_array() {
-            let safe_repo_key = repo_key.replace("/", "__");
+            let safe_repo_key = sanitize_repo_key(repo_key)?;
             let mut file_path = path.clone();
             file_path.push(format!("traffic_views_{}.json", safe_repo_key));
             
@@ -160,14 +212,14 @@ fn merge_bundled_traffic_data(app_handle: tauri::AppHandle, bundle_json: String)
             
             let merged = merge_lists(&existing_arr, incoming_arr);
             let updated_content = serde_json::to_string(&merged).map_err(|e| e.to_string())?;
-            fs::write(file_path, updated_content).map_err(|e| e.to_string())?;
+            write_atomic(&file_path, &updated_content)?;
         }
     }
     
     // Process clones
     for (repo_key, incoming_val) in clones {
         if let Some(incoming_arr) = incoming_val.as_array() {
-            let safe_repo_key = repo_key.replace("/", "__");
+            let safe_repo_key = sanitize_repo_key(repo_key)?;
             let mut file_path = path.clone();
             file_path.push(format!("traffic_clones_{}.json", safe_repo_key));
             
@@ -180,7 +232,7 @@ fn merge_bundled_traffic_data(app_handle: tauri::AppHandle, bundle_json: String)
             
             let merged = merge_lists(&existing_arr, incoming_arr);
             let updated_content = serde_json::to_string(&merged).map_err(|e| e.to_string())?;
-            fs::write(file_path, updated_content).map_err(|e| e.to_string())?;
+            write_atomic(&file_path, &updated_content)?;
         }
     }
     
@@ -322,5 +374,26 @@ mod tests {
 
         assert_eq!(merged.len(), 1);
         assert_eq!(merged[0]["count"], 10);
+    }
+
+    #[test]
+    fn sanitizes_valid_repo_keys_and_rejects_traversal() {
+        use super::{sanitize_repo_key, validate_data_type};
+
+        assert_eq!(sanitize_repo_key("RAKKUNN/Repo-rter").unwrap(), "RAKKUNN__Repo-rter");
+        assert_eq!(sanitize_repo_key("owner/my.repo_1").unwrap(), "owner__my.repo_1");
+
+        // Reject path traversal & illegal characters
+        assert!(sanitize_repo_key("../etc/passwd").is_err());
+        assert!(sanitize_repo_key("owner/../../secret").is_err());
+        assert!(sanitize_repo_key("owner\\repo").is_err());
+        assert!(sanitize_repo_key("/leading/slash").is_err());
+        assert!(sanitize_repo_key(".hidden/repo").is_err());
+        assert!(sanitize_repo_key("").is_err());
+
+        // Data type whitelist
+        assert!(validate_data_type("views").is_ok());
+        assert!(validate_data_type("clones").is_ok());
+        assert!(validate_data_type("referrers; rm -rf").is_err());
     }
 }

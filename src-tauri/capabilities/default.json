@@ -16,6 +16,15 @@
         },
         {
           "url": "https://api.github.com/*"
+        },
+        {
+          "url": "https://*"
+        },
+        {
+          "url": "http://localhost:*"
+        },
+        {
+          "url": "http://127.0.0.1:*"
         }
       ]
     },

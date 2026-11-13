@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Repo-rter",
-  "version": "0.4.5",
+  "version": "0.5.0",
   "identifier": "com.reporter.app",
   "build": {
     "frontendDist": "../out",
@@ -13,14 +13,16 @@
     "windows": [
       {
         "title": "Repo-rter",
-        "width": 800,
-        "height": 600,
+        "width": 1280,
+        "height": 820,
+        "minWidth": 960,
+        "minHeight": 640,
         "resizable": true,
         "fullscreen": false
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' https://avatars.githubusercontent.com https://*.githubusercontent.com data: blob:; connect-src 'self' https://api.github.com https://github.com https: http://localhost:* http://127.0.0.1:* ipc: http://ipc.localhost; object-src 'none'; base-uri 'self';"
     }
   },
   "bundle": {

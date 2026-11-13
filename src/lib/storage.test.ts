@@ -5,7 +5,10 @@ vi.mock('@tauri-apps/api/core', () => ({
   invoke: vi.fn(),
 }));
 
-import { mergeTrafficData } from '@/lib/storage';
+import { mergeTrafficData, loadAllBundledTraffic } from '@/lib/storage';
+import { validateWebdavUrl } from '@/lib/sync';
+import { encryptData, decryptData } from '@/lib/crypto';
+import { UI_THEMES, applyThemeToDocument } from '@/lib/themes';
 
 const point = (timestamp: string, count: number) => ({ timestamp, count, uniques: 1 });
 
@@ -68,5 +71,48 @@ describe('mergeTrafficData (브라우저 localStorage 경로)', () => {
 
     expect(JSON.parse(window.localStorage.getItem('gittraffic_views_owner/repo')!)[0].count).toBe(10);
     expect(JSON.parse(window.localStorage.getItem('gittraffic_clones_owner/repo')!)[0].count).toBe(99);
+  });
+
+  it('loadAllBundledTraffic은 저장된 모든 레포의 views와 clones를 빠짐없이 묶어 반환한다', async () => {
+    await mergeTrafficData('owner/repo-a', 'views', [point('2026-06-01T00:00:00Z', 15)]);
+    await mergeTrafficData('owner/repo-b', 'clones', [point('2026-06-02T00:00:00Z', 7)]);
+
+    const bundled = await loadAllBundledTraffic();
+    expect(bundled.views['owner/repo-a']).toHaveLength(1);
+    expect(bundled.views['owner/repo-a'][0].count).toBe(15);
+    expect(bundled.clones['owner/repo-b']).toHaveLength(1);
+    expect(bundled.clones['owner/repo-b'][0].count).toBe(7);
+  });
+});
+
+describe('Security & Theme System Verification (v0.5.0)', () => {
+  it('encryptData와 decryptData는 빈 패스프레이즈일 때 평문 반환 대신 즉시 예외를 던진다 (Fail-closed)', async () => {
+    await expect(encryptData('{"secret":1}', '')).rejects.toThrow(/passphrase is required/i);
+    await expect(encryptData('{"secret":1}', '   ')).rejects.toThrow(/passphrase is required/i);
+    await expect(decryptData('abc', '')).rejects.toThrow(/passphrase is required/i);
+  });
+
+  it('validateWebdavUrl은 외부 http:// URL을 거부하고 https:// 또는 localhost만 허용한다', () => {
+    expect(validateWebdavUrl('https://cloud.example.com/dav')).toBe(
+      'https://cloud.example.com/dav/repo_rter_sync.enc'
+    );
+    expect(validateWebdavUrl('http://localhost:8080/dav/')).toBe(
+      'http://localhost:8080/dav/repo_rter_sync.enc'
+    );
+    expect(() => validateWebdavUrl('http://insecure.example.com/dav')).toThrow(/HTTPS/i);
+  });
+
+  it('22개 이상의 고유한 UI 디자인 테마가 정의되어 있고 DOM에 정상 반영된다', () => {
+    expect(UI_THEMES.length).toBeGreaterThanOrEqual(20);
+    const uniqueIds = new Set(UI_THEMES.map((t) => t.id));
+    expect(uniqueIds.size).toBe(UI_THEMES.length);
+
+    applyThemeToDocument('glassmorphism');
+    expect(document.documentElement.getAttribute('data-ui-theme')).toBe('glassmorphism');
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+
+    applyThemeToDocument('flat-notion');
+    expect(document.documentElement.getAttribute('data-ui-theme')).toBe('flat-notion');
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
   });
 });

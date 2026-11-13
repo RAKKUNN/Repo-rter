@@ -3,14 +3,16 @@
  * for secure end-to-end encrypted synchronization.
  */
 
-// Helper to convert ArrayBuffer to Base64
+// Helper to convert ArrayBuffer to Base64 in 8KB chunks to avoid O(N^2) string concatenation and call stack limits
 function arrayBufferToBase64(buffer: ArrayBuffer): string {
   const bytes = new Uint8Array(buffer);
-  let binary = '';
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
+  const CHUNK_SIZE = 0x2000; // 8192 bytes per chunk
+  const chunks: string[] = [];
+  for (let i = 0; i < bytes.byteLength; i += CHUNK_SIZE) {
+    const slice = bytes.subarray(i, i + CHUNK_SIZE);
+    chunks.push(String.fromCharCode.apply(null, Array.from(slice)));
   }
-  return window.btoa(binary);
+  return window.btoa(chunks.join(''));
 }
 
 // Helper to convert Base64 to Uint8Array
@@ -55,10 +57,13 @@ async function deriveKey(passphrase: string, salt: Uint8Array, usages: KeyUsage[
 
 /**
  * Encrypts plaintext string using AES-GCM-256.
+ * Fails closed if passphrase is missing so plaintext is never silently uploaded.
  * Returns a base64 string formatted as: salt(16 bytes) + iv(12 bytes) + ciphertext
  */
 export async function encryptData(plaintext: string, passphrase?: string): Promise<string> {
-  if (!passphrase) return plaintext;
+  if (!passphrase || !passphrase.trim()) {
+    throw new Error('Encryption passphrase is required for E2EE synchronization.');
+  }
   
   const encoder = new TextEncoder();
   const plaintextBytes = encoder.encode(plaintext);
@@ -96,7 +101,9 @@ export async function encryptData(plaintext: string, passphrase?: string): Promi
  * Expects base64 formatted as: salt(16 bytes) + iv(12 bytes) + ciphertext
  */
 export async function decryptData(ciphertextWithMetadata: string, passphrase?: string): Promise<string> {
-  if (!passphrase) return ciphertextWithMetadata;
+  if (!passphrase || !passphrase.trim()) {
+    throw new Error('Encryption passphrase is required to decrypt backup data.');
+  }
 
   const combinedBytes = base64ToUint8Array(ciphertextWithMetadata);
 

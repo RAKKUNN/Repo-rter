@@ -1,6 +1,6 @@
 [package]
 name = "app"
-version = "0.4.5"
+version = "0.5.0"
 description = "Local-first desktop dashboard that permanently stores GitHub repository traffic and release download insights"
 authors = ["RAKKUNN"]
 license = "MIT"

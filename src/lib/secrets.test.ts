@@ -15,13 +15,15 @@ vi.mock('@tauri-apps/api/core', () => ({
   }),
 }));
 
-import { getSecret, setSecret, deleteSecret, migrateSecretsFromLocalStorage } from '@/lib/secrets';
+import { getSecret, setSecret, deleteSecret, migrateSecretsFromLocalStorage, clearSecretMemoryCache } from '@/lib/secrets';
 
 describe('secrets', () => {
   beforeEach(() => {
     keychain.clear();
+    clearSecretMemoryCache();
     window.localStorage.clear();
     tauri.enabled = true;
+    vi.clearAllMocks();
   });
 
   describe('Tauri 경로', () => {
@@ -65,6 +67,19 @@ describe('secrets', () => {
 
       expect(await getSecret('github_pat')).toBeNull();
       expect(window.localStorage.getItem('github_pat')).toBeNull();
+    });
+
+    it('20개의 동시 요청이 들어와도 OS 키체인 IPC(get_secret)는 단 1회만 호출한다', async () => {
+      const { invoke } = await import('@tauri-apps/api/core');
+      keychain.set('github_pat', 'ghp_cached');
+      vi.mocked(invoke).mockClear();
+
+      const results = await Promise.all(
+        Array.from({ length: 20 }, () => getSecret('github_pat'))
+      );
+
+      expect(results.every((r) => r === 'ghp_cached')).toBe(true);
+      expect(vi.mocked(invoke)).toHaveBeenCalledTimes(1);
     });
   });
 

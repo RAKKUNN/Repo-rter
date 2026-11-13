@@ -1,28 +1,451 @@
 @import "tailwindcss";
 
-:root {
-  /* Pixel Art Theme Variables */
-  --background: #E5E5F7; /* Grid paper retro feel */
+:root,
+html[data-ui-theme="neubrutalism-light"] {
+  --background: #E5E5F7;
   --foreground: #1A1A1A;
+  --pixel-blue: #2563eb;
+  --pixel-purple: #7c3aed;
+  --pixel-green: #059669;
+  --pixel-red: #dc2626;
+  --pixel-yellow: #d97706;
+  --pixel-panel-bg: #FFFFFF;
+  --pixel-border: #1A1A1A;
+  --dot-color: #C1C1D6;
 
-  /* Retro Arcade Colors */
+  --card-radius: 0px;
+  --card-border-width: 2px;
+  --card-shadow: 6px 6px 0px var(--pixel-border);
+  --control-shadow: 2px 2px 0px var(--pixel-border);
+  --card-backdrop: none;
+  --bg-pattern: radial-gradient(var(--dot-color) 1px, transparent 1px), radial-gradient(var(--dot-color) 1px, transparent 1px);
+  --bg-size: 20px 20px;
+  --bg-position: 0 0, 10px 10px;
+}
+
+.dark,
+html[data-ui-theme="neubrutalism-dark"] {
+  --background: #16161A;
+  --foreground: #F5F5F5;
   --pixel-blue: #3b82f6;
   --pixel-purple: #8b5cf6;
   --pixel-green: #10b981;
   --pixel-red: #ef4444;
   --pixel-yellow: #f59e0b;
+  --pixel-panel-bg: #1F1F24;
+  --pixel-border: #F5F5F5;
+  --dot-color: #2A2A32;
 
-  --pixel-panel-bg: #FFFFFF;
-  --pixel-border: #1A1A1A;
-  --dot-color: #C1C1D6;
+  --card-radius: 0px;
+  --card-border-width: 2px;
+  --card-shadow: 6px 6px 0px var(--pixel-border);
+  --control-shadow: 2px 2px 0px var(--pixel-border);
+  --card-backdrop: none;
+  --bg-pattern: radial-gradient(var(--dot-color) 1px, transparent 1px), radial-gradient(var(--dot-color) 1px, transparent 1px);
+  --bg-size: 20px 20px;
+  --bg-position: 0 0, 10px 10px;
 }
 
-.dark {
-  --background: #1A1A1A; 
-  --foreground: #F5F5F5;
-  --pixel-panel-bg: #1A1A1A;
-  --pixel-border: #F5F5F5;
-  --dot-color: #222222;
+/* 1. Flat Design — Notion Paper */
+html[data-ui-theme="flat-notion"] {
+  --background: #F7F6F3;
+  --foreground: #37352F;
+  --pixel-blue: #2383E2;
+  --pixel-purple: #9065B0;
+  --pixel-green: #0F7B6C;
+  --pixel-red: #E03E3E;
+  --pixel-yellow: #DFAB01;
+  --pixel-panel-bg: #FFFFFF;
+  --pixel-border: #E3E2E0;
+  --card-radius: 6px;
+  --card-border-width: 1px;
+  --card-shadow: none;
+  --control-shadow: none;
+  --card-backdrop: none;
+  --bg-pattern: none;
+}
+
+/* 2. Flat Design — Spotify Carbon */
+html[data-ui-theme="flat-spotify"] {
+  --background: #121212;
+  --foreground: #FFFFFF;
+  --pixel-blue: #169C46;
+  --pixel-purple: #1DB954;
+  --pixel-green: #1DB954;
+  --pixel-red: #E91429;
+  --pixel-yellow: #FFA42B;
+  --pixel-panel-bg: #181818;
+  --pixel-border: #282828;
+  --card-radius: 8px;
+  --card-border-width: 1px;
+  --card-shadow: none;
+  --control-shadow: none;
+  --card-backdrop: none;
+  --bg-pattern: none;
+}
+
+/* 3. Material Design 3 (Material You) */
+html[data-ui-theme="material-you"] {
+  --background: #FEF7FF;
+  --foreground: #1D1B20;
+  --pixel-blue: #6750A4;
+  --pixel-purple: #7D5260;
+  --pixel-green: #386A20;
+  --pixel-red: #B3261E;
+  --pixel-yellow: #7D5700;
+  --pixel-panel-bg: #F3EDF7;
+  --pixel-border: #CAC4D0;
+  --card-radius: 20px;
+  --card-border-width: 1px;
+  --card-shadow: 0 4px 14px rgba(103, 80, 164, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --control-shadow: 0 2px 6px rgba(103, 80, 164, 0.1);
+  --card-backdrop: none;
+  --bg-pattern: none;
+}
+
+/* 4. Fluent Design — Windows 11 Acrylic */
+html[data-ui-theme="fluent-acrylic"] {
+  --background: #0B132B;
+  --foreground: #F8FAFC;
+  --pixel-blue: #0284C7;
+  --pixel-purple: #9333EA;
+  --pixel-green: #10B981;
+  --pixel-red: #F43F5E;
+  --pixel-yellow: #F59E0B;
+  --pixel-panel-bg: rgba(30, 41, 59, 0.68);
+  --pixel-border: rgba(255, 255, 255, 0.14);
+  --card-radius: 10px;
+  --card-border-width: 1px;
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --control-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --card-backdrop: blur(24px) saturate(150%);
+  --bg-pattern: radial-gradient(circle at 15% 15%, rgba(96, 205, 255, 0.18), transparent 40%), radial-gradient(circle at 85% 80%, rgba(168, 85, 247, 0.18), transparent 45%);
+  --bg-size: 100% 100%;
+  --bg-position: 0 0;
+}
+
+/* 5. Apple Human Interface — macOS Vibrancy */
+html[data-ui-theme="apple-hig"] {
+  --background: #ECEFF4;
+  --foreground: #1D1D1F;
+  --pixel-blue: #007AFF;
+  --pixel-purple: #5856D6;
+  --pixel-green: #34C759;
+  --pixel-red: #FF3B30;
+  --pixel-yellow: #FF9500;
+  --pixel-panel-bg: rgba(255, 255, 255, 0.76);
+  --pixel-border: rgba(0, 0, 0, 0.09);
+  --card-radius: 14px;
+  --card-border-width: 1px;
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --control-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --card-backdrop: blur(20px) saturate(180%);
+  --bg-pattern: radial-gradient(circle at 20% 0%, rgba(0, 122, 255, 0.08), transparent 50%), radial-gradient(circle at 80% 100%, rgba(88, 86, 214, 0.08), transparent 50%);
+  --bg-size: 100% 100%;
+  --bg-position: 0 0;
+}
+
+/* 6. Glassmorphism — Frosted Crystal */
+html[data-ui-theme="glassmorphism"] {
+  --background: #13112E;
+  --foreground: #F8FAFC;
+  --pixel-blue: #0284C7;
+  --pixel-purple: #DB2777;
+  --pixel-green: #10B981;
+  --pixel-red: #E11D48;
+  --pixel-yellow: #FACC15;
+  --pixel-panel-bg: rgba(255, 255, 255, 0.10);
+  --pixel-border: rgba(255, 255, 255, 0.25);
+  --card-radius: 18px;
+  --card-border-width: 1px;
+  --card-shadow: 0 8px 32px rgba(8, 12, 30, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.28);
+  --control-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --card-backdrop: blur(18px) saturate(160%);
+  --bg-pattern: radial-gradient(circle at 12% 20%, rgba(244, 114, 182, 0.35), transparent 38%), radial-gradient(circle at 88% 25%, rgba(56, 189, 248, 0.35), transparent 40%), radial-gradient(circle at 50% 85%, rgba(139, 92, 246, 0.35), transparent 45%);
+  --bg-size: 100% 100%;
+  --bg-position: 0 0;
+}
+
+/* 7. Neumorphism Light — Soft Extruded */
+html[data-ui-theme="neumorphism-light"] {
+  --background: #E0E5EC;
+  --foreground: #2D3748;
+  --pixel-blue: #4F46E5;
+  --pixel-purple: #7C3AED;
+  --pixel-green: #059669;
+  --pixel-red: #E11D48;
+  --pixel-yellow: #D97706;
+  --pixel-panel-bg: #E0E5EC;
+  --pixel-border: rgba(255, 255, 255, 0.45);
+  --card-radius: 20px;
+  --card-border-width: 1px;
+  --card-shadow: 8px 8px 16px #A3B1C6, -8px -8px 16px #FFFFFF;
+  --control-shadow: 4px 4px 8px #A3B1C6, -4px -4px 8px #FFFFFF;
+  --card-backdrop: none;
+  --bg-pattern: none;
+}
+
+/* 8. Neumorphism Dark — Dark Tactile */
+html[data-ui-theme="neumorphism-dark"] {
+  --background: #24272C;
+  --foreground: #E2E8F0;
+  --pixel-blue: #2563EB;
+  --pixel-purple: #6366F1;
+  --pixel-green: #10B981;
+  --pixel-red: #E11D48;
+  --pixel-yellow: #FBBF24;
+  --pixel-panel-bg: #24272C;
+  --pixel-border: rgba(255, 255, 255, 0.04);
+  --card-radius: 20px;
+  --card-border-width: 1px;
+  --card-shadow: 7px 7px 14px #181A1D, -7px -7px 14px #30343B;
+  --control-shadow: 3px 3px 7px #181A1D, -3px -3px 7px #30343B;
+  --card-backdrop: none;
+  --bg-pattern: none;
+}
+
+/* 9. Minimalism — MUJI / Swiss Pure */
+html[data-ui-theme="minimal-muji"] {
+  --background: #FAFAFA;
+  --foreground: #111111;
+  --pixel-blue: #111111;
+  --pixel-purple: #525252;
+  --pixel-green: #166534;
+  --pixel-red: #991B1B;
+  --pixel-yellow: #854D0E;
+  --pixel-panel-bg: #FFFFFF;
+  --pixel-border: #E5E5E5;
+  --card-radius: 0px;
+  --card-border-width: 1px;
+  --card-shadow: none;
+  --control-shadow: none;
+  --card-backdrop: none;
+  --bg-pattern: none;
+}
+
+/* 10. Dark Mode — OLED True Black */
+html[data-ui-theme="oled-midnight"] {
+  --background: #000000;
+  --foreground: #F3F4F6;
+  --pixel-blue: #0891B2;
+  --pixel-purple: #9333EA;
+  --pixel-green: #10B981;
+  --pixel-red: #F43F5E;
+  --pixel-yellow: #F59E0B;
+  --pixel-panel-bg: #09090B;
+  --pixel-border: #27272A;
+  --card-radius: 10px;
+  --card-border-width: 1px;
+  --card-shadow: none;
+  --control-shadow: none;
+  --card-backdrop: none;
+  --bg-pattern: none;
+}
+
+/* 11. Card-based — Bento Grid */
+html[data-ui-theme="card-bento"] {
+  --background: #F1F5F9;
+  --foreground: #0F172A;
+  --pixel-blue: #EA580C;
+  --pixel-purple: #2563EB;
+  --pixel-green: #16A34A;
+  --pixel-red: #DC2626;
+  --pixel-yellow: #D97706;
+  --pixel-panel-bg: #FFFFFF;
+  --pixel-border: #E2E8F0;
+  --card-radius: 24px;
+  --card-border-width: 1px;
+  --card-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  --control-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+  --card-backdrop: none;
+  --bg-pattern: none;
+}
+
+/* 12. Gradient Design — Stripe Vivid */
+html[data-ui-theme="gradient-stripe"] {
+  --background: #0A0D18;
+  --foreground: #F8FAFC;
+  --pixel-blue: #6366F1;
+  --pixel-purple: #EC4899;
+  --pixel-green: #14B8A6;
+  --pixel-red: #F43F5E;
+  --pixel-yellow: #F59E0B;
+  --pixel-panel-bg: rgba(19, 27, 46, 0.88);
+  --pixel-border: rgba(99, 102, 241, 0.38);
+  --card-radius: 16px;
+  --card-border-width: 1px;
+  --card-shadow: 0 10px 30px -5px rgba(99, 102, 241, 0.22), 0 4px 12px rgba(236, 72, 153, 0.12);
+  --control-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+  --card-backdrop: blur(12px);
+  --bg-pattern: linear-gradient(135deg, rgba(99, 102, 241, 0.16) 0%, rgba(236, 72, 153, 0.14) 50%, rgba(20, 184, 166, 0.12) 100%);
+  --bg-size: 100% 100%;
+  --bg-position: 0 0;
+}
+
+/* 15. Typographic Design — Bloomberg Editorial */
+html[data-ui-theme="typographic-editorial"] {
+  --background: #FBF9F5;
+  --foreground: #111111;
+  --pixel-blue: #111111;
+  --pixel-purple: #B91C1C;
+  --pixel-green: #15803D;
+  --pixel-red: #B91C1C;
+  --pixel-yellow: #B45309;
+  --pixel-panel-bg: #F4F0E8;
+  --pixel-border: #111111;
+  --card-radius: 0px;
+  --card-border-width: 2px;
+  --card-shadow: none;
+  --control-shadow: none;
+  --card-backdrop: none;
+  --bg-pattern: linear-gradient(to bottom, rgba(17, 17, 17, 0.04) 1px, transparent 1px);
+  --bg-size: 100% 32px;
+  --bg-position: 0 0;
+}
+
+/* 16. Brutalism — 90s Raw Web */
+html[data-ui-theme="brutalism-raw"] {
+  --background: #FFFF00;
+  --foreground: #000000;
+  --pixel-blue: #0000FF;
+  --pixel-purple: #FF0000;
+  --pixel-green: #008000;
+  --pixel-red: #FF0000;
+  --pixel-yellow: #FF8800;
+  --pixel-panel-bg: #FFFFFF;
+  --pixel-border: #000000;
+  --card-radius: 0px;
+  --card-border-width: 3px;
+  --card-shadow: 5px 5px 0px #0000FF;
+  --control-shadow: 3px 3px 0px #000000;
+  --card-backdrop: none;
+  --bg-pattern: none;
+}
+
+/* 17. 3D Design — Layered Perspective */
+html[data-ui-theme="three-d-depth"] {
+  --background: #0D1117;
+  --foreground: #F0F6FC;
+  --pixel-blue: #0284C7;
+  --pixel-purple: #D97706;
+  --pixel-green: #16A34A;
+  --pixel-red: #E11D48;
+  --pixel-yellow: #D29922;
+  --pixel-panel-bg: #161B22;
+  --pixel-border: #30363D;
+  --card-radius: 14px;
+  --card-border-width: 2px;
+  --card-shadow: 0 7px 0 #010409, 0 14px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  --control-shadow: 0 4px 0 #010409;
+  --card-backdrop: none;
+  --bg-pattern: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.12), transparent 60%);
+  --bg-size: 100% 100%;
+  --bg-position: 0 0;
+}
+
+/* 18. Isometric — 2.5D Blueprint */
+html[data-ui-theme="isometric-blueprint"] {
+  --background: #0A2540;
+  --foreground: #E0F2FE;
+  --pixel-blue: #0284C7;
+  --pixel-purple: #2563EB;
+  --pixel-green: #0D9488;
+  --pixel-red: #E11D48;
+  --pixel-yellow: #FACC15;
+  --pixel-panel-bg: rgba(15, 52, 91, 0.9);
+  --pixel-border: #00D4FF;
+  --card-radius: 2px;
+  --card-border-width: 2px;
+  --card-shadow: 6px 6px 0px rgba(0, 212, 255, 0.35);
+  --control-shadow: 3px 3px 0px rgba(0, 212, 255, 0.35);
+  --card-backdrop: none;
+  --bg-pattern: linear-gradient(30deg, rgba(0, 212, 255, 0.08) 1px, transparent 1px), linear-gradient(150deg, rgba(0, 212, 255, 0.08) 1px, transparent 1px);
+  --bg-size: 28px 28px;
+  --bg-position: 0 0;
+}
+
+/* 19. Claymorphism — 3D Soft Clay */
+html[data-ui-theme="claymorphism"] {
+  --background: #EEF2FF;
+  --foreground: #1E1B4B;
+  --pixel-blue: #6366F1;
+  --pixel-purple: #EC4899;
+  --pixel-green: #10B981;
+  --pixel-red: #F43F5E;
+  --pixel-yellow: #F59E0B;
+  --pixel-panel-bg: #FFFFFF;
+  --pixel-border: rgba(255, 255, 255, 0.8);
+  --card-radius: 28px;
+  --card-border-width: 2px;
+  --card-shadow: 0 16px 32px rgba(99, 102, 241, 0.16), inset -6px -6px 12px rgba(99, 102, 241, 0.12), inset 6px 6px 12px rgba(255, 255, 255, 0.9);
+  --control-shadow: 0 8px 16px rgba(99, 102, 241, 0.14), inset -3px -3px 6px rgba(99, 102, 241, 0.12);
+  --card-backdrop: none;
+  --bg-pattern: radial-gradient(circle at 80% 10%, rgba(236, 72, 153, 0.12), transparent 40%), radial-gradient(circle at 10% 90%, rgba(99, 102, 241, 0.12), transparent 40%);
+  --bg-size: 100% 100%;
+  --bg-position: 0 0;
+}
+
+/* 20. Aurora UI / Mesh Gradient */
+html[data-ui-theme="aurora-mesh"] {
+  --background: #060814;
+  --foreground: #F8FAFC;
+  --pixel-blue: #059669;
+  --pixel-purple: #6366F1;
+  --pixel-green: #10B981;
+  --pixel-red: #E11D48;
+  --pixel-yellow: #FBBF24;
+  --pixel-panel-bg: rgba(15, 23, 42, 0.65);
+  --pixel-border: rgba(129, 140, 248, 0.28);
+  --card-radius: 16px;
+  --card-border-width: 1px;
+  --card-shadow: 0 12px 36px rgba(16, 185, 129, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --control-shadow: 0 4px 14px rgba(16, 185, 129, 0.15);
+  --card-backdrop: blur(20px) saturate(160%);
+  --bg-pattern: radial-gradient(at 15% 15%, rgba(52, 211, 153, 0.28) 0px, transparent 45%), radial-gradient(at 85% 20%, rgba(129, 140, 248, 0.30) 0px, transparent 50%), radial-gradient(at 50% 85%, rgba(236, 72, 153, 0.22) 0px, transparent 50%);
+  --bg-size: 100% 100%;
+  --bg-position: 0 0;
+}
+
+/* 21. Frutiger Aero — 2000s Aqua Gloss */
+html[data-ui-theme="frutiger-aero"] {
+  --background: #D8F3FA;
+  --foreground: #0C4A6E;
+  --pixel-blue: #0284C7;
+  --pixel-purple: #0EA5E9;
+  --pixel-green: #10B981;
+  --pixel-red: #EF4444;
+  --pixel-yellow: #F59E0B;
+  --pixel-panel-bg: rgba(255, 255, 255, 0.82);
+  --pixel-border: #7DD3FC;
+  --card-radius: 16px;
+  --card-border-width: 1px;
+  --card-shadow: 0 8px 24px rgba(2, 132, 199, 0.18), inset 0 2px 0 rgba(255, 255, 255, 0.95);
+  --control-shadow: 0 3px 8px rgba(2, 132, 199, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --card-backdrop: blur(12px);
+  --bg-pattern: linear-gradient(180deg, rgba(56, 189, 248, 0.3) 0%, rgba(255, 255, 255, 0.6) 55%, rgba(16, 185, 129, 0.25) 100%);
+  --bg-size: 100% 100%;
+  --bg-position: 0 0;
+}
+
+/* 22. Skeuomorphism — Tactile Studio Leather & Paper */
+html[data-ui-theme="skeuomorphism"] {
+  --background: #D6CFC2;
+  --foreground: #292524;
+  --pixel-blue: #9A3412;
+  --pixel-purple: #B45309;
+  --pixel-green: #15803D;
+  --pixel-red: #B91C1C;
+  --pixel-yellow: #D97706;
+  --pixel-panel-bg: #F5EFE0;
+  --pixel-border: #8C7A6B;
+  --card-radius: 10px;
+  --card-border-width: 2px;
+  --card-shadow: 0 5px 10px rgba(0, 0, 0, 0.26), inset 0 1px 0 #FFFFFF, inset 0 -2px 0 rgba(140, 122, 107, 0.25);
+  --control-shadow: 0 2px 4px rgba(0, 0, 0, 0.25), inset 0 1px 0 #FFFFFF;
+  --card-backdrop: none;
+  --bg-pattern: radial-gradient(rgba(68, 64, 60, 0.1) 1px, transparent 1px);
+  --bg-size: 8px 8px;
+  --bg-position: 0 0;
 }
 
 @theme inline {
@@ -50,12 +473,11 @@ body {
   color: var(--color-foreground);
   font-family: var(--font-sans);
   min-height: 100vh;
-  background-image: 
-    radial-gradient(var(--dot-color) 1px, transparent 1px),
-    radial-gradient(var(--dot-color) 1px, transparent 1px);
-  background-size: 20px 20px;
-  background-position: 0 0, 10px 10px;
+  background-image: var(--bg-pattern, none);
+  background-size: var(--bg-size, auto);
+  background-position: var(--bg-position, 0 0);
   background-attachment: fixed;
+  transition: background-color 0.25s ease, color 0.2s ease;
   
   /* Make it feel like a native app by disabling text selection */
   user-select: none;
@@ -79,7 +501,7 @@ body {
 }
 ::-webkit-scrollbar-thumb {
   background: var(--pixel-border);
-  border-radius: 0;
+  border-radius: var(--card-radius, 0px);
 }
 ::-webkit-scrollbar-corner {
   background: transparent;
@@ -101,23 +523,47 @@ img, a {
   -webkit-user-select: text;
 }
 
-/* Pixel Art Utilities (Replacing Glassmorphism) */
-@layer utilities {
-  .glass-panel {
-    @apply bg-transparent border-2 border-transparent dark:border-transparent rounded-none;
-    box-shadow: 6px 6px 0px var(--pixel-border);
-    border-color: var(--pixel-border);
+/* Dynamic Theme-Aware Panel & Control Components
+   Placed in @layer components with :where() default surface/border colors
+   so Tailwind utility classes (e.g. bg-pixel-blue, bg-pixel-purple, border-pixel-blue)
+   always win without specificity conflicts. */
+@layer components {
+  :where(.glass-panel) {
     background-color: var(--pixel-panel-bg);
+    border-color: var(--pixel-border);
+  }
+
+  .glass-panel {
+    border-style: solid;
+    border-width: var(--card-border-width, 2px);
+    border-radius: var(--card-radius, 0px);
+    box-shadow: var(--card-shadow, none);
+    backdrop-filter: var(--card-backdrop, none);
+    -webkit-backdrop-filter: var(--card-backdrop, none);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  :where(.theme-control) {
+    background-color: var(--pixel-panel-bg);
+    border-color: var(--pixel-border);
+  }
+
+  .theme-control {
+    border-style: solid;
+    border-width: var(--card-border-width, 2px);
+    border-radius: calc(var(--card-radius, 0px) * 0.6);
+    box-shadow: var(--control-shadow, none);
+    backdrop-filter: var(--card-backdrop, none);
+    -webkit-backdrop-filter: var(--card-backdrop, none);
+    transition: all 0.15s ease;
   }
   
   .glass-panel-hover {
-    @apply transition-transform duration-75 hover:-translate-y-1 hover:-translate-x-1 cursor-pointer active:translate-y-1 active:translate-x-1;
+    @apply transition-transform duration-150 hover:-translate-y-1 cursor-pointer active:translate-y-0.5;
   }
   
   .text-gradient {
-    /* No gradient for retro, just solid retro color with text shadow */
     @apply text-pixel-blue;
-    text-shadow: 2px 2px 0px var(--pixel-border);
   }
 }
 

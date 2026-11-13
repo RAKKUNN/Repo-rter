@@ -156,11 +156,11 @@ export async function getRepoLanguages(owner: string, repo: string) {
 export async function getRepoPulls(owner: string, repo: string) {
   if (MOCK_DATA) {
     return [
-      { state: 'open' }, { state: 'open' }, { state: 'closed' }, { state: 'closed' }
+      { state: 'open' }, { state: 'open' }
     ];
   }
   const headers = await getAuthHeaders();
-  const res = await customFetch(`https://api.github.com/repos/${owner}/${repo}/pulls?state=all&per_page=100`, { headers });
+  const res = await customFetch(`https://api.github.com/repos/${owner}/${repo}/pulls?state=open&per_page=100`, { headers });
   if (!res.ok) return [];
   return res.json();
 }
@@ -205,6 +205,32 @@ export async function getRepoMentions(repoName: string) {
     return res.json();
   } catch {
     return { items: [] };
+  }
+}
+
+export async function getRepoCommits(owner: string, repo: string) {
+  if (MOCK_DATA) {
+    return [
+      {
+        sha: '60afc32',
+        commit: {
+          message: 'docs: add ARCHITECTURE.md and update README navigation',
+          author: { name: 'RAKKUNN', date: new Date().toISOString() },
+        },
+        html_url: '#',
+      },
+    ];
+  }
+  const headers = await getAuthHeaders();
+  try {
+    const res = await customFetch(
+      `https://api.github.com/repos/${owner}/${repo}/commits?per_page=5`,
+      { headers }
+    );
+    if (!res.ok) return [];
+    return res.json();
+  } catch {
+    return [];
   }
 }
 

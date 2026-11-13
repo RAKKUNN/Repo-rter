@@ -140,14 +140,14 @@ If Repo-rter saved your historical stats, please consider **starring the reposit
 
 ## 📝 Changelog
 
+### v0.5.0
+- **Security Hardening**: Enabled strict WebView CSP, Rust IPC path-traversal & secret-key whitelisting, fail-closed E2EE WebDAV sync, and HTTPS endpoint validation.
+- **Performance & Reliability**: Atomic Rust file writes, single-prompt Keychain memory caching + request deduplication, sidebar hover prefetching, and full-disk JSON/CSV export across all repositories.
+- **22 UI Design Themes & Interactive Analytics**: Added 22 selectable design themes in Settings, interactive chart range/mode filters (`7D`–`ALL`, `Area`/`Bar`), contextual `Total Stars` / `Total Forks` / `Total Repos` breakdown views, GitHub-style Languages breakdown, Repository Pulse & Recent Commits, and Release OS platform download share analytics.
+
 ### v0.4.5
 - Fixed the settings modal disappearing instantly on close instead of animating out.
 - Added `prefers-reduced-motion` support so animations are minimized for users who request reduced motion in their OS settings.
-
-### v0.4.4
-- Moved the GitHub token, WebDAV password, and E2EE passphrase out of browser `localStorage` into the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service).
-- Existing plaintext secrets are migrated automatically on first launch. The keychain copy is written and read back before the plaintext is removed.
-- Sync settings now save when you leave the field instead of on every keystroke.
 
 > 💡 **For the complete historical changelog across all releases, see [CHANGELOG.md](CHANGELOG.md).**
 

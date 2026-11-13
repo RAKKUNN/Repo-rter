@@ -109,3 +109,56 @@ function cleanLocalStorage(thresholdStr: string): void {
     }
   }
 }
+
+export interface BundledTrafficCache {
+  views: Record<string, TrafficDataPoint[]>;
+  clones: Record<string, TrafficDataPoint[]>;
+}
+
+/**
+ * Loads all persisted repository traffic data (views and clones) from native disk storage
+ * (or localStorage fallback) so Export JSON/CSV includes every repository, not just React Query's active cache.
+ */
+export async function loadAllBundledTraffic(): Promise<BundledTrafficCache> {
+  if (typeof window === 'undefined') {
+    return { views: {}, clones: {} };
+  }
+
+  if (isTauri()) {
+    try {
+      const raw = await invoke<string>('bundle_traffic_cache');
+      const parsed = JSON.parse(raw);
+      return {
+        views: parsed?.views || {},
+        clones: parsed?.clones || {},
+      };
+    } catch (e) {
+      console.error('Failed to bundle traffic cache from Rust:', e);
+    }
+  }
+
+  const views: Record<string, TrafficDataPoint[]> = {};
+  const clones: Record<string, TrafficDataPoint[]> = {};
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key) continue;
+    if (key.startsWith('gittraffic_views_')) {
+      const repoKey = key.slice('gittraffic_views_'.length);
+      try {
+        views[repoKey] = JSON.parse(localStorage.getItem(key) || '[]');
+      } catch {
+        views[repoKey] = [];
+      }
+    } else if (key.startsWith('gittraffic_clones_')) {
+      const repoKey = key.slice('gittraffic_clones_'.length);
+      try {
+        clones[repoKey] = JSON.parse(localStorage.getItem(key) || '[]');
+      } catch {
+        clones[repoKey] = [];
+      }
+    }
+  }
+
+  return { views, clones };
+}
