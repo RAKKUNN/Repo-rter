@@ -35,11 +35,11 @@ export async function getUser() {
 export async function getRepos() {
   if (MOCK_DATA) {
     return [
-      { id: 1, name: 'awesome-project', owner: { login: 'pixel-ninja' }, stargazers_count: 24500, forks_count: 3200, open_issues_count: 42, description: 'The most awesome pixel art project' },
-      { id: 2, name: 'next-dashboard', owner: { login: 'pixel-ninja' }, stargazers_count: 18200, forks_count: 1500, open_issues_count: 15, description: 'Next.js dashboard template' },
-      { id: 3, name: 'retro-tools', owner: { login: 'pixel-ninja' }, stargazers_count: 9400, forks_count: 850, open_issues_count: 8, description: 'CLI tools with retro aesthetics' },
-      { id: 4, name: 'rust-core', owner: { login: 'pixel-ninja' }, stargazers_count: 5300, forks_count: 420, open_issues_count: 3, description: 'High performance core components' },
-      { id: 5, name: 'pixel-ui', owner: { login: 'pixel-ninja' }, stargazers_count: 1200, forks_count: 150, open_issues_count: 1, description: 'Neo-brutalist UI component library' },
+      { id: 1, name: 'awesome-project', owner: { login: 'pixel-ninja' }, stargazers_count: 24500, forks_count: 3200, open_issues_count: 42, size: 18420, language: 'TypeScript', license: { spdx_id: 'MIT' }, pushed_at: new Date().toISOString(), description: 'The most awesome pixel art project' },
+      { id: 2, name: 'next-dashboard', owner: { login: 'pixel-ninja' }, stargazers_count: 18200, forks_count: 1500, open_issues_count: 15, size: 12400, language: 'TypeScript', license: { spdx_id: 'MIT' }, pushed_at: new Date().toISOString(), description: 'Next.js dashboard template' },
+      { id: 3, name: 'retro-tools', owner: { login: 'pixel-ninja' }, stargazers_count: 9400, forks_count: 850, open_issues_count: 8, size: 6800, language: 'Rust', license: { spdx_id: 'Apache-2.0' }, pushed_at: new Date().toISOString(), description: 'CLI tools with retro aesthetics' },
+      { id: 4, name: 'rust-core', owner: { login: 'pixel-ninja' }, stargazers_count: 5300, forks_count: 420, open_issues_count: 3, size: 9200, language: 'Rust', license: { spdx_id: 'MIT' }, pushed_at: new Date().toISOString(), description: 'High performance core components' },
+      { id: 5, name: 'pixel-ui', owner: { login: 'pixel-ninja' }, stargazers_count: 1200, forks_count: 150, open_issues_count: 1, size: 4100, language: 'CSS', license: { spdx_id: 'MIT' }, pushed_at: new Date().toISOString(), description: 'Neo-brutalist UI component library' },
     ];
   }
   const headers = await getAuthHeaders();
@@ -212,10 +212,26 @@ export async function getRepoCommits(owner: string, repo: string) {
   if (MOCK_DATA) {
     return [
       {
-        sha: '60afc32',
+        sha: '1407b53',
         commit: {
-          message: 'docs: add ARCHITECTURE.md and update README navigation',
-          author: { name: 'RAKKUNN', date: new Date().toISOString() },
+          message: 'release: v0.5.0 security hardening, 22 UI themes, and interactive analytics',
+          author: { name: 'pixel-ninja', date: new Date().toISOString() },
+        },
+        html_url: '#',
+      },
+      {
+        sha: '8f3a91c',
+        commit: {
+          message: 'feat(ui): add GitHub-style language breakdown & release OS share bar',
+          author: { name: 'pixel-ninja', date: new Date(Date.now() - 86400000).toISOString() },
+        },
+        html_url: '#',
+      },
+      {
+        sha: '4d2c71e',
+        commit: {
+          message: 'perf(storage): atomic JSON file writes and in-flight keychain deduplication',
+          author: { name: 'pixel-ninja', date: new Date(Date.now() - 172800000).toISOString() },
         },
         html_url: '#',
       },
